@@ -138,7 +138,7 @@ main {
     margin-right: 30px;
 }
 
-.text-input::placeholder {
+.comment-body::placeholder {
     font-family: Inter;
     font-size: 16px;
     font-weight: 400;
@@ -147,7 +147,7 @@ main {
     font-style: normal;
 }
 
-.text-input {
+.comment-body {
     width: 688px;
     height: auto;
     border: none;
@@ -161,13 +161,9 @@ main {
     line-height: normal;
     text-indent: 30px;
     outline: none;
-    resize: vertical;
-    overflow: hidden;
-    word-wrap: break-word;
-    padding-top: 20px;
 }
 
-.writing-comments__info--her__name {
+.comment-name {
     color: #122ac0;
     font-family: Inter;
     font-size: 18px;
@@ -176,6 +172,7 @@ main {
 }
 
 .writing-comments__info--prohibition {
+    display: flex;
     color: #000;
     font-family: Inter;
     font-size: 14px;
@@ -188,7 +185,7 @@ main {
     padding: 20px 59px 20px 59px;
     border: none;
     border-radius: 5px;
-    background: #abd873;
+    background-color: #A1A1A1;
     color: #000;
     font-family: Inter;
     font-size: 18px;
@@ -334,4 +331,24 @@ main {
     opacity: 0.4;
     margin-right: 15px;
     margin-left: 15px;
+}
+
+.comment-field {
+    display: flex;
+    flex-direction: column-reverse;
+}
+
+.error-output {
+    margin-left: 30px;
+    font-family: Inter;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+}
+
+.active {
+    color: #F00;
+    opacity: 1;
+    margin-left: 82px;
 }
