@@ -10,16 +10,20 @@ document.querySelector('.send__btn').onclick = function() {
     event.preventDefault();
     let comment = {
         name : commentName.textContent,
-        body : commentBody.value,
+        body : commentBody.innerText,
         time : Math.floor(Date.now()/1000)
     }
-    commentBody.value = '';
+    commentBody.innerText = '';
     comments.push(comment);
 
     saveComments();
     showComments(); 
     button.style.backgroundColor = '';
     symbolsLimit.innerHTML = `Макс. 1000 символов`;
+    symbolsLimit.classList.remove('active');
+    symbolsLimit.style.marginLeft = '';
+    button.disabled = true;
+    button.style.cursor = 'default';
 }
 
 function saveComments() {
@@ -72,15 +76,16 @@ function timeConverter(UNIX_timestamp) {
 }
 
 commentBody.addEventListener('input', function() {
-    if (commentBody.value) {
+    if (commentBody.innerText) {
         button.style.backgroundColor = '#ABD873';
     } else {
         button.style.backgroundColor = ''; 
     } 
     
-    if (commentBody.value !== '') {
-        symbols = commentBody.value.split(' ').join('');
-        count = symbols.length;
+    symbols = commentBody.innerText.split(' ').join('');
+    count = symbols.length;
+
+    if (commentBody.innerText !== '') {
         symbolsLimit.innerHTML = `${count}/1000`;
         symbolsLimit.style.marginLeft = '82px';
     }else {
@@ -91,8 +96,24 @@ commentBody.addEventListener('input', function() {
     if (count > 1000) {
         symbolsLimit.innerHTML = `${count}/1000 <p class='error-output'>Слишком длинное сообщение</p>`
         symbolsLimit.classList.add('active');
-    }else if (count <= 1000) {
+        button.style.backgroundColor = '#A1A1A1';
+        button.disabled = true;
+        button.style.cursor = 'default';
+    }else if (count <= 1000 && count >=1) {
         symbolsLimit.classList.remove('active')
+        button.disabled = false;
+        button.style.cursor = 'pointer';
+    }else if (count <= 0 || Boolean(commentBody.value)) {
+        button.disabled = true;
+        button.style.cursor = 'default';
+    }
+});
+
+commentBody.addEventListener('input', function() {
+    if (commentBody.textContent.trim().length === 0) {
+        commentBody.setAttribute('data-placeholder', 'Введите комментарий');
+    } else {
+        commentBody.removeAttribute('data-placeholder');
     }
 });
 

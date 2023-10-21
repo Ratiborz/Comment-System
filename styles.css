@@ -138,7 +138,13 @@ main {
     margin-right: 30px;
 }
 
-.comment-body::placeholder {
+.placeholder {
+    position: absolute;
+    left: 30px;
+    top: 20px;
+}
+
+.ph_content {
     font-family: Inter;
     font-size: 16px;
     font-weight: 400;
@@ -148,8 +154,7 @@ main {
 }
 
 .comment-body {
-    width: 688px;
-    height: auto;
+    width: 628px;
     border: none;
     border-radius: 5px;
     background: #fff;
@@ -159,8 +164,9 @@ main {
     font-size: 16px;
     font-weight: 400;
     line-height: normal;
-    text-indent: 30px;
     outline: none;
+    word-wrap: break-word;
+    padding: 20px 30px 20px 30px;
 }
 
 .comment-name {
@@ -192,7 +198,6 @@ main {
     font-style: normal;
     font-weight: 400;
     line-height: normal;
-    cursor: pointer;
     margin-left: 30px;
     height: 61px;
 }
@@ -204,6 +209,7 @@ main {
 
 .text_btn {
     display: flex;
+    position: relative;
 }
 
 .static-comment__avatar {
@@ -221,6 +227,7 @@ main {
 .second-part-commit {
     display: flex;
     flex-direction: column;
+    width: 100%;
 }
 
 .commit-info {
@@ -236,6 +243,8 @@ main {
     font-style: normal;
     font-weight: 400;
     line-height: normal;
+    max-width: 931px;
+    word-wrap: break-word;
 }
 
 .commit-actions {
@@ -319,6 +328,7 @@ main {
 .static-comment__reply {
     display: flex;
     margin-left: 88px;
+    margin-bottom: 30px;
 }
 
 .reply-nickname {
