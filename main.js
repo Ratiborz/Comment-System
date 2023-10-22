@@ -1,8 +1,4 @@
-const commentName = document.querySelector('.comment-name');
-const commentBody = document.querySelector('.comment-body');
-const button = document.querySelector('.send__btn');
-const symbolsLimit = document.querySelector('.writing-comments__info--prohibition');
-const placeholder = document.querySelector('.placeholder');
+import {commentName, commentBody, button, symbolsLimit, placeholder} from './modules/constants.js';
 
 let comments = [];
 loadComments();
@@ -87,7 +83,6 @@ commentBody.addEventListener('input', function() {
         button.style.backgroundColor = ''; 
     } 
     
-
     if (count) {
         symbolsLimit.innerHTML = `${count}/1000`;
         symbolsLimit.style.marginLeft = '82px';
@@ -113,9 +108,3 @@ commentBody.addEventListener('input', function() {
         button.style.cursor = 'default';
     }
 });
-
-
-
-
-
-
