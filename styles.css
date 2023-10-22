@@ -142,6 +142,8 @@ main {
     position: absolute;
     left: 30px;
     top: 20px;
+    pointer-events: none;
+    user-select: none;
 }
 
 .ph_content {

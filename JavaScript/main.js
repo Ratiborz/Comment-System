@@ -2,6 +2,7 @@ const commentName = document.querySelector('.comment-name');
 const commentBody = document.querySelector('.comment-body');
 const button = document.querySelector('.send__btn');
 const symbolsLimit = document.querySelector('.writing-comments__info--prohibition');
+const placeholder = document.querySelector('.placeholder');
 
 let comments = [];
 loadComments();
@@ -24,6 +25,7 @@ document.querySelector('.send__btn').onclick = function() {
     symbolsLimit.style.marginLeft = '';
     button.disabled = true;
     button.style.cursor = 'default';
+    placeholder.style.display = 'block';
 }
 
 function saveComments() {
@@ -76,21 +78,24 @@ function timeConverter(UNIX_timestamp) {
 }
 
 commentBody.addEventListener('input', function() {
-    if (commentBody.innerText) {
+    symbols = commentBody.innerText.replace(/\s/g, '');
+    count = symbols.length;
+
+    if (count) {
         button.style.backgroundColor = '#ABD873';
     } else {
         button.style.backgroundColor = ''; 
     } 
     
-    symbols = commentBody.innerText.split(' ').join('');
-    count = symbols.length;
 
-    if (commentBody.innerText !== '') {
+    if (count) {
         symbolsLimit.innerHTML = `${count}/1000`;
         symbolsLimit.style.marginLeft = '82px';
+        placeholder.style.display = 'none';
     }else {
         symbolsLimit.innerHTML = `Макс. 1000 символов`;
         symbolsLimit.style.marginLeft = '';
+        placeholder.style.display = 'block';
     }
 
     if (count > 1000) {
@@ -103,19 +108,13 @@ commentBody.addEventListener('input', function() {
         symbolsLimit.classList.remove('active')
         button.disabled = false;
         button.style.cursor = 'pointer';
-    }else if (count <= 0 || Boolean(commentBody.value)) {
+    }else if (count <= 0) {
         button.disabled = true;
         button.style.cursor = 'default';
     }
 });
 
-commentBody.addEventListener('input', function() {
-    if (commentBody.textContent.trim().length === 0) {
-        commentBody.setAttribute('data-placeholder', 'Введите комментарий');
-    } else {
-        commentBody.removeAttribute('data-placeholder');
-    }
-});
+
 
 
 
