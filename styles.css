@@ -223,7 +223,12 @@ main {
 
 .static-comment {
     display: flex;
+    flex-direction: column;
     margin-bottom: 30px;
+}
+
+.static-comment__flex {
+    display: flex;
 }
 
 .second-part-commit {
@@ -247,6 +252,12 @@ main {
     line-height: normal;
     max-width: 931px;
     word-wrap: break-word;
+}
+
+.writing-answers {
+    margin-top: 30px;
+    margin-bottom: 30px;
+    margin-left: 91px;
 }
 
 .commit-actions {

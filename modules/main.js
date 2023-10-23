@@ -1,6 +1,7 @@
-import {commentName, commentBody, button, symbolsLimit, placeholder} from './modules/constants.js';
+import {commentName, commentBody, button, symbolsLimit, placeholder, commitNickname, replyNickname, commitReply} from './constants.js';
 
 let comments = [];
+let answers = []; 
 loadComments();
 
 document.querySelector('.send__btn').onclick = function() {
@@ -38,6 +39,7 @@ function showComments() {
     let out = '';
     comments.forEach(function(item) {
         out += `<div class="static-comment">
+        <div class="static-comment__flex">
         <img src="./images/Max.png" alt="Max" class="avatar">
         <div class="second-part-commit">
             <div class="commit-info">
@@ -55,6 +57,7 @@ function showComments() {
                 <img src="./images/Plus.svg" alt="plus" class="plus-svg">
             </div>
         </div>
+    </div>
     </div>`;
     });
     commentField.innerHTML = out;
@@ -74,8 +77,8 @@ function timeConverter(UNIX_timestamp) {
 }
 
 commentBody.addEventListener('input', function() {
-    symbols = commentBody.innerText.replace(/\s/g, '');
-    count = symbols.length;
+    let symbols = commentBody.innerText.replace(/\s/g, '');
+    let count = symbols.length;
 
     if (count) {
         button.style.backgroundColor = '#ABD873';
@@ -106,5 +109,43 @@ commentBody.addEventListener('input', function() {
     }else if (count <= 0) {
         button.disabled = true;
         button.style.cursor = 'default';
+    }
+});
+
+commentBody.addEventListener("paste", (event) => {
+    const clipboardData = event.clipboardData || window.clipboardData;
+
+    if (clipboardData) {
+      // Проверяем, есть ли изображение в буфере обмена
+      if (clipboardData.types && clipboardData.types.includes("Files")) {
+        // Отменяем вставку изображений
+        event.preventDefault();
+        alert("Вставка изображений запрещена.");
+      }
+    }
+});
+
+commentBody.addEventListener("paste", function(event) {
+    event.preventDefault();
+    let text = event.clipboardData.getData("text/plain");
+    let strippedText = text.replace(/(<([^>]+)>)/gi, "");
+    document.execCommand("insertHTML", false, strippedText);
+});
+
+commitReply.addEventListener('click', function(event) {
+    
+    if (event.target.classList.contains('commit-reply')) {
+        let answer = {
+            name : commitNickname.textContent,
+            replyNickname : replyNickname.textContent,
+            body : commentBody.innerText,
+            time : Math.floor(Date.now()/1000)
+        }
+        answers.push(answer);
+    
+        console.log(answers);
+    
+        showAnswer();
+
     }
 });

@@ -52,7 +52,7 @@
                         </div>
                         <div class="placeholder">
                             <div class="ph_input">
-                                <div class="ph_content">Введите текст сообщения</div>
+                                <div class="ph_content">Введите текст сообщения...</div>
                             </div>
                         </div>
                         <button class="send__btn" disabled>Отправить</button>
@@ -63,34 +63,48 @@
                 
             </div>
             <div class="static-comment">
-                <img src="./images/Sanya.png" alt="Sanya" class="static-comment__avatar">
-                <div class="second-part-commit">
-                    <div class="commit-info">
-                        <p class="commit-nickname">Алексей_1994b</p>
-                        <p class="time">15.01 13:55</p>
+                <div class="static-comment__flex">
+                    <img src="./images/Sanya.png" alt="Sanya" class="static-comment__avatar">
+                    <div class="second-part-commit">
+                        <div class="commit-info">
+                            <p class="commit-nickname">Алексей_1994b</p>
+                            <p class="time">15.01 13:55</p>
+                        </div>
+                        <p class="commit-text">Самое обидное когда сценарий по сути есть - в виде книг, где нет сюжетных
+                            дыр, всё логично, стройное повествование и достаточно взять и экранизировать оригинал как это
+                            было в первых фильмах с минимальным количеством отсебятины и зритель с восторгом примет любой
+                            такой фильм и сериал, однако вместо этого 'Кольца власти' просто позаимствовали имена из
+                            оригинала, куски истории, мало связанные между собой и выдали очередной среднячковый сериал на
+                            один раз в лучшем случае.</p>
+                        <div class="commit-actions">
+                            <img src="./images/Send.svg" alt="send" class="send-svg">
+                            <p class="commit-reply">Ответить</p>
+                            <img src="./images/Empty-heart.svg" alt="heart" class="heart-svg">
+                            <p class="favorites">В избранном</p>
+                            <img src="./images/Minus.svg" alt="minus" class="minus-svg">
+                            <span class="number-likes">6</span>
+                            <img src="./images/Plus.svg" alt="plus" class="plus-svg">
+                        </div>
                     </div>
-                    <p class="commit-text">Самое обидное когда сценарий по сути есть - в виде книг, где нет сюжетных
-                        дыр, всё логично, стройное повествование и достаточно взять и экранизировать оригинал как это
-                        было в первых фильмах с минимальным количеством отсебятины и зритель с восторгом примет любой
-                        такой фильм и сериал, однако вместо этого 'Кольца власти' просто позаимствовали имена из
-                        оригинала, куски истории, мало связанные между собой и выдали очередной среднячковый сериал на
-                        один раз в лучшем случае.</p>
-                    <div class="commit-actions">
-                        <img src="./images/Send.svg" alt="send" class="send-svg">
-                        <p class="commit-reply">Ответить</p>
-                        <img src="./images/Empty-heart.svg" alt="heart" class="heart-svg">
-                        <p class="favorites">В избранном</p>
-                        <img src="./images/Minus.svg" alt="minus" class="minus-svg">
-                        <span class="number-likes">6</span>
-                        <img src="./images/Plus.svg" alt="plus" class="plus-svg">
+                </div>
+
+                <div class="text_btn writing-answers">
+                    <div class="comment-body" tabindex="0" contenteditable="true" role="textbox" aria-multiline="true">
+
                     </div>
+                    <div class="placeholder">
+                        <div class="ph_input">
+                            <div class="ph_content">Введите текст сообщения...</div>
+                        </div>
+                    </div>
+                    <button class="send__btn" disabled>Отправить</button>
                 </div>
             </div>
             <div class="static-comment__reply">
                 <img src="./images/Masturbek.png" alt="Masturbek" class="static-comment__avatar">
                 <div class="second-part-commit">
                     <div class="commit-info">
-                        <p class="commit-nickname">Джунбокс3000</p>
+                        <p class="commit-nickname reply-name">Джунбокс3000</p>
                         <img src="./images/Send.svg" alt="send">
                         <p class="reply-nickname">Алексей_1994b</p>
                         <p class="time">15.01 15:18</p>
@@ -111,5 +125,5 @@
         </main>
     </div>
 </body>
-<script src="./main.js" type="module"></script>
+<script src="./modules/main.js" type="module"></script>
 </html>
