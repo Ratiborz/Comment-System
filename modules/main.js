@@ -138,14 +138,25 @@ commitReply.addEventListener('click', function(event) {
         let answer = {
             name : commitNickname.textContent,
             replyNickname : replyNickname.textContent,
-            body : commentBody.innerText,
-            time : Math.floor(Date.now()/1000)
         }
         answers.push(answer);
     
         console.log(answers);
-    
-        showAnswer();
 
     }
 });
+
+function showInput() {
+
+    let out = `<div class="text_btn writing-answers">
+        <div class="comment-body" tabindex="0" contenteditable="true" role="textbox" aria-multiline="true">
+
+        </div>
+        <div class="placeholder">
+            <div class="ph_input">
+                <div class="ph_content">Введите текст сообщения...</div>
+            </div>
+        </div>
+        <button class="send__btn" disabled>Отправить</button>
+    </div>`
+}
