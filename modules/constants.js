@@ -7,4 +7,3 @@ export const placeholder = document.querySelector('.placeholder');
 
 export const commitNickname = document.querySelector('.reply-name');
 export const replyNickname = document.querySelector('.reply-nickname');
-export const commitReply = document.querySelector('.commit-reply');

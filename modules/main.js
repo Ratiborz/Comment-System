@@ -1,5 +1,6 @@
-import {commentName, commentBody, button, symbolsLimit, placeholder, commitNickname, replyNickname, commitReply} from './constants.js';
+import {commentName, commentBody, button, symbolsLimit, placeholder, commitNickname, replyNickname,} from './constants.js';
 
+let commitReply;
 let comments = [];
 let answers = []; 
 loadComments();
@@ -61,6 +62,7 @@ function showComments() {
     </div>`;
     });
     commentField.innerHTML = out;
+    commitReply = document.querySelectorAll('.commit-reply');
 }
 
 function timeConverter(UNIX_timestamp) {
@@ -132,31 +134,32 @@ commentBody.addEventListener("paste", function(event) {
     document.execCommand("insertHTML", false, strippedText);
 });
 
-commitReply.addEventListener('click', function(event) {
-    
-    if (event.target.classList.contains('commit-reply')) {
+commitReply.forEach(button => {
+
+    button.addEventListener('click', function() {
         let answer = {
-            name : commitNickname.textContent,
-            replyNickname : replyNickname.textContent,
+            name : commitNickname.innerText,
+            replyNickname : replyNickname.innerText,
         }
         answers.push(answer);
-    
-        console.log(answers);
-
-    }
-});
+        
+        console.log(answers); 
+    }) 
+})
 
 function showInput() {
-
     let out = `<div class="text_btn writing-answers">
-        <div class="comment-body" tabindex="0" contenteditable="true" role="textbox" aria-multiline="true">
-
-        </div>
-        <div class="placeholder">
-            <div class="ph_input">
-                <div class="ph_content">Введите текст сообщения...</div>
-            </div>
-        </div>
-        <button class="send__btn" disabled>Отправить</button>
-    </div>`
+                <div class="comment-body" tabindex="0" contenteditable="true" role="textbox" aria-multiline="true">
+        
+                </div>
+                <div class="placeholder">
+                    <div class="ph_input">
+                        <div class="ph_content">Введите текст сообщения...</div>
+                    </div>
+                </div>
+                <button class="send__btn" disabled>Отправить</button>
+            </div>`
 }
+
+
+
