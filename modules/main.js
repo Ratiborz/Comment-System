@@ -63,6 +63,7 @@ function showComments() {
     });
     commentField.innerHTML = out;
     commitReply = document.querySelectorAll('.commit-reply');
+    console.log('работает')
 }
 
 function timeConverter(UNIX_timestamp) {
@@ -134,6 +135,20 @@ commentBody.addEventListener("paste", function(event) {
     document.execCommand("insertHTML", false, strippedText);
 });
 
+/*function showInput() {
+    let out = `<div class="text_btn writing-answers">
+                <div class="comment-body" tabindex="0" contenteditable="true" role="textbox" aria-multiline="true">
+        
+                </div>
+                <div class="placeholder">
+                    <div class="ph_input">
+                        <div class="ph_content">Введите текст сообщения...</div>
+                    </div>
+                </div>
+                <button class="send__btn" disabled>Отправить</button>
+            </div>`
+}*/
+
 commitReply.forEach(button => {
 
     button.addEventListener('click', function() {
@@ -146,20 +161,5 @@ commitReply.forEach(button => {
         console.log(answers); 
     }) 
 })
-
-function showInput() {
-    let out = `<div class="text_btn writing-answers">
-                <div class="comment-body" tabindex="0" contenteditable="true" role="textbox" aria-multiline="true">
-        
-                </div>
-                <div class="placeholder">
-                    <div class="ph_input">
-                        <div class="ph_content">Введите текст сообщения...</div>
-                    </div>
-                </div>
-                <button class="send__btn" disabled>Отправить</button>
-            </div>`
-}
-
 
 
