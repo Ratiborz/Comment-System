@@ -1,22 +1,32 @@
-import {commentName, commentBody, button, symbolsLimit, placeholder, commitNickname, replyNickname,} from './constants.js';
+import {
+    commentName,
+    commentBody,
+    button,
+    symbolsLimit,
+    placeholder,
+    commitNickname,
+    replyNickname,
+} from './constants.js';
 
-let commitReply;
+let currentInput = document.querySelector('.static-comment');
+let inputAnswer = document.getElementById('input-answer');
+
 let comments = [];
-let answers = []; 
+let answers = [];
 loadComments();
 
-document.querySelector('.send__btn').onclick = function() {
+document.querySelector('.send__btn').onclick = function () {
     event.preventDefault();
     let comment = {
-        name : commentName.textContent,
-        body : commentBody.innerText,
-        time : Math.floor(Date.now()/1000)
-    }
+        name: commentName.textContent,
+        body: commentBody.innerText,
+        time: Math.floor(Date.now() / 1000),
+    };
     commentBody.innerText = '';
     comments.push(comment);
 
     saveComments();
-    showComments(); 
+    showComments();
     button.style.backgroundColor = '';
     symbolsLimit.innerHTML = `Макс. 1000 символов`;
     symbolsLimit.classList.remove('active');
@@ -24,10 +34,10 @@ document.querySelector('.send__btn').onclick = function() {
     button.disabled = true;
     button.style.cursor = 'default';
     placeholder.style.display = 'block';
-}
+};
 
 function saveComments() {
-    localStorage.setItem('comments', JSON.stringify(comments)); 
+    localStorage.setItem('comments', JSON.stringify(comments));
 }
 
 function loadComments() {
@@ -38,37 +48,47 @@ function loadComments() {
 function showComments() {
     let commentField = document.getElementById('comment-field');
     let out = '';
-    comments.forEach(function(item) {
+    comments.forEach(function (item) {
         out += `<div class="static-comment">
-        <div class="static-comment__flex">
-        <img src="./images/Max.png" alt="Max" class="avatar">
-        <div class="second-part-commit">
-            <div class="commit-info">
-                <p class="commit-nickname">${item.name}</p>
-                <p class="time">${timeConverter(item.time)}</p>
-            </div>
-            <p class="commit-text">${item.body}</p>
-            <div class="commit-actions">
-                <img src="./images/Send.svg" alt="send" class="send-svg">
-                <p class="commit-reply">Ответить</p>
-                <img src="./images/Empty-heart.svg" alt="heart" class="heart-svg">
-                <p class="favorites">В избранном</p>
-                <img src="./images/Minus.svg" alt="minus" class="minus-svg">
-                <span class="number-likes">0</span>
-                <img src="./images/Plus.svg" alt="plus" class="plus-svg">
+            <div class="static-comment__flex">
+            <img src="./images/Max.png" alt="Max" class="avatar">
+            <div class="second-part-commit">
+                <div class="commit-info">
+                    <p class="commit-nickname">${item.name}</p>
+                    <p class="time">${timeConverter(item.time)}</p>
+                </div>
+                <p class="commit-text">${item.body}</p>
+                <div class="commit-actions">
+                    <img src="./images/Send.svg" alt="send" class="send-svg">
+                    <p class="commit-reply">Ответить</p>
+                    <img src="./images/Empty-heart.svg" alt="heart" class="heart-svg">
+                    <p class="favorites">В избранном</p>
+                    <img src="./images/Minus.svg" alt="minus" class="minus-svg">
+                    <span class="number-likes">0</span>
+                    <img src="./images/Plus.svg" alt="plus" class="plus-svg">
+                </div>
             </div>
         </div>
-    </div>
+        <div class="text_btn writing-answers reply-input" style="display: none;">
+                    <div class="comment-body" tabindex="0" contenteditable="true" role="textbox" aria-multiline="true">
+            
+                    </div>
+                    <div class="placeholder">
+                        <div class="ph_input">
+                            <div class="ph_content">Введите текст сообщения...</div>
+                        </div>
+                    </div>
+                    <button class="send__btn" disabled>Отправить</button>
+                </div>
     </div>`;
     });
     commentField.innerHTML = out;
-    commitReply = document.querySelectorAll('.commit-reply');
-    console.log('работает')
+    initAnswersEvent();
 }
 
 function timeConverter(UNIX_timestamp) {
     let a = new Date(UNIX_timestamp * 1000);
-    let months = ['01','02','03','04','05','06','07','08','09','10','11','12'];
+    let months = ['01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12'];
     let year = a.getFullYear();
     let month = months[a.getMonth()];
     let date = a.getDate();
@@ -76,67 +96,81 @@ function timeConverter(UNIX_timestamp) {
     let min = String(a.getMinutes()).padStart(2, '0');
     let sec = a.getSeconds();
     let time = `${date}.${month} ${hour}:${min}`;
-    return time; 
+    return time;
 }
 
-commentBody.addEventListener('input', function() {
+commentBody.addEventListener('input', function () {
     let symbols = commentBody.innerText.replace(/\s/g, '');
     let count = symbols.length;
 
     if (count) {
         button.style.backgroundColor = '#ABD873';
     } else {
-        button.style.backgroundColor = ''; 
-    } 
-    
+        button.style.backgroundColor = '';
+    }
+
     if (count) {
         symbolsLimit.innerHTML = `${count}/1000`;
         symbolsLimit.style.marginLeft = '82px';
         placeholder.style.display = 'none';
-    }else {
+    } else {
         symbolsLimit.innerHTML = `Макс. 1000 символов`;
         symbolsLimit.style.marginLeft = '';
         placeholder.style.display = 'block';
     }
 
     if (count > 1000) {
-        symbolsLimit.innerHTML = `${count}/1000 <p class='error-output'>Слишком длинное сообщение</p>`
+        symbolsLimit.innerHTML = `${count}/1000 <p class='error-output'>Слишком длинное сообщение</p>`;
         symbolsLimit.classList.add('active');
         button.style.backgroundColor = '#A1A1A1';
         button.disabled = true;
         button.style.cursor = 'default';
-    }else if (count <= 1000 && count >=1) {
-        symbolsLimit.classList.remove('active')
+    } else if (count <= 1000 && count >= 1) {
+        symbolsLimit.classList.remove('active');
         button.disabled = false;
         button.style.cursor = 'pointer';
-    }else if (count <= 0) {
+    } else if (count <= 0) {
         button.disabled = true;
         button.style.cursor = 'default';
     }
 });
 
-commentBody.addEventListener("paste", (event) => {
+commentBody.addEventListener('paste', (event) => {
     const clipboardData = event.clipboardData || window.clipboardData;
 
     if (clipboardData) {
-      // Проверяем, есть ли изображение в буфере обмена
-      if (clipboardData.types && clipboardData.types.includes("Files")) {
-        // Отменяем вставку изображений
-        event.preventDefault();
-        alert("Вставка изображений запрещена.");
-      }
+        // Проверяем, есть ли изображение в буфере обмена
+        if (clipboardData.types && clipboardData.types.includes('Files')) {
+            // Отменяем вставку изображений
+            event.preventDefault();
+            alert('Вставка изображений запрещена.');
+        }
     }
 });
 
-commentBody.addEventListener("paste", function(event) {
+commentBody.addEventListener('paste', function (event) {
     event.preventDefault();
-    let text = event.clipboardData.getData("text/plain");
-    let strippedText = text.replace(/(<([^>]+)>)/gi, "");
-    document.execCommand("insertHTML", false, strippedText);
+    let text = event.clipboardData.getData('text/plain');
+    let strippedText = text.replace(/(<([^>]+)>)/gi, '');
+    document.execCommand('insertHTML', false, strippedText);
 });
 
-/*function showInput() {
-    let out = `<div class="text_btn writing-answers">
+/*function initAnswersEvent() {
+   const replyButtons = document.querySelectorAll('.commit-reply');
+   const replyInput = document.querySelector('.reply-input');
+   replyButtons.forEach((button) => {
+        button.addEventListener('click', function () {
+            // Удаляем текущий блок ввода, если он существует
+            if (helpAnswers) {
+                helpAnswers.remove();
+            }
+            showInput();
+        });
+    });
+}
+
+function showInput() {
+    let out = `<div class="text_btn writing-answers reply-input">
                 <div class="comment-body" tabindex="0" contenteditable="true" role="textbox" aria-multiline="true">
         
                 </div>
@@ -146,20 +180,28 @@ commentBody.addEventListener("paste", function(event) {
                     </div>
                 </div>
                 <button class="send__btn" disabled>Отправить</button>
-            </div>`
+            </div>`;
+
+    inputAnswer.innerHTML = out;
 }*/
 
-commitReply.forEach(button => {
-
-    button.addEventListener('click', function() {
-        let answer = {
-            name : commitNickname.innerText,
-            replyNickname : replyNickname.innerText,
-        }
-        answers.push(answer);
-        
-        console.log(answers); 
-    }) 
-})
-
-
+function initAnswersEvent() {
+    const replyButtons = document.querySelectorAll('.commit-reply');
+    
+    replyButtons.forEach((button) => {
+         button.addEventListener('click', function () {
+             // Скрываем все другие поля ввода
+             const allReplyInputs = document.querySelectorAll('.reply-input');
+             allReplyInputs.forEach((replyInput) => {
+                 replyInput.style.display = 'none';
+             });
+             
+             // Находим ближайший родительский комментарий и его поле ввода
+             const comment = this.closest('.static-comment');
+             const replyInput = comment.querySelector('.reply-input');
+             
+             // Показываем поле ввода только для текущего комментария
+             replyInput.style.display = 'block';
+         });
+     });
+ }
