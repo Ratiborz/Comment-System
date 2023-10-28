@@ -375,3 +375,16 @@ main {
     opacity: 1;
     margin-left: 82px;
 }
+
+.svg-cross__btn {
+    background-color: rgb(244, 58, 45);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px 20px 20px 20px
+}
+
+.svg-cross {
+    width: 40px;
+    height: 40px;
+}

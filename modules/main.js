@@ -79,6 +79,7 @@ function showComments() {
                         </div>
                     </div>
                     <button class="send__btn" disabled>Отправить</button>
+                    <button class="send__btn svg-cross__btn"><img src="./images/cross-svgrepo-com.svg" alt="cross" class="svg-cross"></button>
                 </div>
     </div>`;
     });
@@ -201,7 +202,7 @@ function initAnswersEvent() {
              const replyInput = comment.querySelector('.reply-input');
              
              // Показываем поле ввода только для текущего комментария
-             replyInput.style.display = 'block';
+             replyInput.style.display = 'flex';
          });
      });
- }
+}
