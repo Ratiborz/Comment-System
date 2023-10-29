@@ -101,6 +101,7 @@ function timeConverter(UNIX_timestamp) {
 
 function handleInput(event) {
     let inputClass = event.target.classList.value;
+    let inputForAnswers = event.target.classList.contains('reply-comment-body');
     let symbols = event.target.innerText.replace(/\s/g, '');
     let count = symbols.length;
 
@@ -138,7 +139,7 @@ function handleInput(event) {
         }
     }
     // Для другого инпута, например replyInput
-    else if (event.target.classList.contains('reply-comment-body')) {
+    else if (inputForAnswers) {
         if (count) {
             button.style.backgroundColor = '#ABD873';
         } else {
@@ -186,14 +187,14 @@ function initAnswersEvent() {
              
              // Находим ближайший родительский комментарий и его поле ввода
              const comment = this.closest('.static-comment');
-             const replyCommentBody = comment.querySelector('.reply-comment-body')
              const replyInput = comment.querySelector('.reply-input');
+             const replyCommentBody = comment.querySelector('.reply-comment-body')
              
              // Показываем поле ввода только для текущего комментария
              replyInput.style.display = 'flex';
 
-             replyInput.addEventListener('paste', banImage);
-             replyInput.addEventListener('paste', banHtmlTag);
+             replyCommentBody.addEventListener('paste', banImage);
+             replyCommentBody.addEventListener('paste', banHtmlTag);
              replyCommentBody.addEventListener('input', handleInput);
          });
      });
