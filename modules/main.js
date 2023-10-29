@@ -4,18 +4,13 @@ import {
     button,
     symbolsLimit,
     placeholder,
-    commitNickname,
-    replyNickname,
 } from './constants.js';
-
-let currentInput = document.querySelector('.static-comment');
-let inputAnswer = document.getElementById('input-answer');
 
 let comments = [];
 let answers = [];
 loadComments();
 
-document.querySelector('.send__btn').onclick = function () {
+document.querySelector('.send__btn').addEventListener('click',  function() {
     event.preventDefault();
     let comment = {
         name: commentName.textContent,
@@ -34,7 +29,7 @@ document.querySelector('.send__btn').onclick = function () {
     button.disabled = true;
     button.style.cursor = 'default';
     placeholder.style.display = 'block';
-};
+});
 
 function saveComments() {
     localStorage.setItem('comments', JSON.stringify(comments));
@@ -70,7 +65,7 @@ function showComments() {
             </div>
         </div>
         <div class="text_btn writing-answers reply-input" style="display: none;">
-                    <div class="comment-body" tabindex="0" contenteditable="true" role="textbox" aria-multiline="true">
+                    <div class="comment-body reply-comment-body" tabindex="0" contenteditable="true" role="textbox" aria-multiline="true">
             
                     </div>
                     <div class="placeholder">
@@ -87,6 +82,10 @@ function showComments() {
     initAnswersEvent();
 }
 
+commentBody.addEventListener('input', handleInput);
+commentBody.addEventListener('paste', banImage);
+commentBody.addEventListener('paste', banHtmlTag);
+
 function timeConverter(UNIX_timestamp) {
     let a = new Date(UNIX_timestamp * 1000);
     let months = ['01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12'];
@@ -100,43 +99,61 @@ function timeConverter(UNIX_timestamp) {
     return time;
 }
 
-commentBody.addEventListener('input', function () {
-    let symbols = commentBody.innerText.replace(/\s/g, '');
+function handleInput(event) {
+    let inputClass = event.target.classList.value;
+    let symbols = event.target.innerText.replace(/\s/g, '');
     let count = symbols.length;
 
-    if (count) {
-        button.style.backgroundColor = '#ABD873';
-    } else {
-        button.style.backgroundColor = '';
-    }
+    // Для основного комментария
+    if (inputClass === 'comment-body') {
+        if (count) {
+            button.style.backgroundColor = '#ABD873';
+        } else {
+            button.style.backgroundColor = '';
+        }
 
-    if (count) {
-        symbolsLimit.innerHTML = `${count}/1000`;
-        symbolsLimit.style.marginLeft = '82px';
-        placeholder.style.display = 'none';
-    } else {
-        symbolsLimit.innerHTML = `Макс. 1000 символов`;
-        symbolsLimit.style.marginLeft = '';
-        placeholder.style.display = 'block';
-    }
+        if (count) {
+            symbolsLimit.innerHTML = `${count}/1000`;
+            symbolsLimit.style.marginLeft = '82px';
+            placeholder.style.display = 'none';
+        } else {
+            symbolsLimit.innerHTML = 'Макс. 1000 символов';
+            symbolsLimit.style.marginLeft = '';
+            placeholder.style.display = 'block';
+        }
 
-    if (count > 1000) {
-        symbolsLimit.innerHTML = `${count}/1000 <p class='error-output'>Слишком длинное сообщение</p>`;
-        symbolsLimit.classList.add('active');
-        button.style.backgroundColor = '#A1A1A1';
-        button.disabled = true;
-        button.style.cursor = 'default';
-    } else if (count <= 1000 && count >= 1) {
-        symbolsLimit.classList.remove('active');
-        button.disabled = false;
-        button.style.cursor = 'pointer';
-    } else if (count <= 0) {
-        button.disabled = true;
-        button.style.cursor = 'default';
+        if (count > 1000) {
+            symbolsLimit.innerHTML = `${count}/1000 <p class='error-output'>Слишком длинное сообщение</p>`;
+            symbolsLimit.classList.add('active');
+            button.style.backgroundColor = '#A1A1A1';
+            button.disabled = true;
+            button.style.cursor = 'default';
+        } else if (count <= 1000 && count >= 1) {
+            symbolsLimit.classList.remove('active');
+            button.disabled = false;
+            button.style.cursor = 'pointer';
+        } else if (count <= 0) {
+            button.disabled = true;
+            button.style.cursor = 'default';
+        }
     }
-});
+    // Для другого инпута, например replyInput
+    else if (event.target.classList.contains('reply-comment-body')) {
+        if (count) {
+            button.style.backgroundColor = '#ABD873';
+        } else {
+            button.style.backgroundColor = '';
+        }
 
-commentBody.addEventListener('paste', (event) => {
+        if (count) {
+            placeholder.style.display = 'none';
+        } else {
+            placeholder.style.display = 'block';
+        }
+    }
+}
+
+function banImage(event)  {
     const clipboardData = event.clipboardData || window.clipboardData;
 
     if (clipboardData) {
@@ -147,44 +164,14 @@ commentBody.addEventListener('paste', (event) => {
             alert('Вставка изображений запрещена.');
         }
     }
-});
+};
 
-commentBody.addEventListener('paste', function (event) {
+function banHtmlTag(event) {
     event.preventDefault();
     let text = event.clipboardData.getData('text/plain');
     let strippedText = text.replace(/(<([^>]+)>)/gi, '');
     document.execCommand('insertHTML', false, strippedText);
-});
-
-/*function initAnswersEvent() {
-   const replyButtons = document.querySelectorAll('.commit-reply');
-   const replyInput = document.querySelector('.reply-input');
-   replyButtons.forEach((button) => {
-        button.addEventListener('click', function () {
-            // Удаляем текущий блок ввода, если он существует
-            if (helpAnswers) {
-                helpAnswers.remove();
-            }
-            showInput();
-        });
-    });
-}
-
-function showInput() {
-    let out = `<div class="text_btn writing-answers reply-input">
-                <div class="comment-body" tabindex="0" contenteditable="true" role="textbox" aria-multiline="true">
-        
-                </div>
-                <div class="placeholder">
-                    <div class="ph_input">
-                        <div class="ph_content">Введите текст сообщения...</div>
-                    </div>
-                </div>
-                <button class="send__btn" disabled>Отправить</button>
-            </div>`;
-
-    inputAnswer.innerHTML = out;
-}*/
+};
 
 function initAnswersEvent() {
     const replyButtons = document.querySelectorAll('.commit-reply');
@@ -199,10 +186,15 @@ function initAnswersEvent() {
              
              // Находим ближайший родительский комментарий и его поле ввода
              const comment = this.closest('.static-comment');
+             const replyCommentBody = comment.querySelector('.reply-comment-body')
              const replyInput = comment.querySelector('.reply-input');
              
              // Показываем поле ввода только для текущего комментария
              replyInput.style.display = 'flex';
+
+             replyInput.addEventListener('paste', banImage);
+             replyInput.addEventListener('paste', banHtmlTag);
+             replyCommentBody.addEventListener('input', handleInput);
          });
      });
 }
