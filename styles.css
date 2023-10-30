@@ -383,6 +383,7 @@ main {
     align-items: center;
     padding: 20px 20px 20px 20px;
     margin-left: 10px;
+    cursor: pointer;
 }
 
 .svg-cross {

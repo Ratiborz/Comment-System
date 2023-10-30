@@ -102,10 +102,11 @@ function timeConverter(UNIX_timestamp) {
 function handleInput(event) {
     let inputClass = event.target.classList.value;
     let inputForAnswers = event.target.classList.contains('reply-comment-body');
+
     let symbols = event.target.innerText.replace(/\s/g, '');
     let count = symbols.length;
 
-    // Для основного комментария
+    // Для основного ввода
     if (inputClass === 'comment-body') {
         if (count) {
             button.style.backgroundColor = '#ABD873';
@@ -138,18 +139,36 @@ function handleInput(event) {
             button.style.cursor = 'default';
         }
     }
-    // Для другого инпута, например replyInput
+    // Для другого инпута replyInput
     else if (inputForAnswers) {
+        // Обработка ввода в инпуте ответов
+        // Поиск элементов внутри текущего инпута ответов
+        let currentInput = event.target;
+        let currentButton = currentInput.parentElement.querySelector('.send__btn');
+        let currentPlaceholder = currentInput.parentElement.querySelector('.placeholder');
+
         if (count) {
-            button.style.backgroundColor = '#ABD873';
+            currentButton.style.backgroundColor = '#ABD873';
         } else {
-            button.style.backgroundColor = '';
+            currentButton.style.backgroundColor = '';
         }
 
         if (count) {
-            placeholder.style.display = 'none';
+            currentPlaceholder.style.display = 'none';
         } else {
-            placeholder.style.display = 'block';
+            currentPlaceholder.style.display = 'block';
+        }
+
+        if (count > 1000) {
+            currentButton.style.backgroundColor = '#A1A1A1';
+            currentButton.disabled = true;
+            currentButton.style.cursor = 'default';
+        } else if (count <= 1000 && count >= 1) {
+            currentButton.disabled = false;
+            currentButton.style.cursor = 'pointer';
+        } else if (count <= 0) {
+            currentButton.disabled = true;
+            currentButton.style.cursor = 'default';
         }
     }
 }
@@ -188,7 +207,11 @@ function initAnswersEvent() {
              // Находим ближайший родительский комментарий и его поле ввода
              const comment = this.closest('.static-comment');
              const replyInput = comment.querySelector('.reply-input');
-             const replyCommentBody = comment.querySelector('.reply-comment-body')
+             const replyCommentBody = comment.querySelector('.reply-comment-body');
+             const currentButton = comment.querySelector('.send__btn');
+             const currentButtonExit = comment.querySelector('.svg-cross__btn');
+             const commentReplyName = comment.querySelector('.commit-nickname');
+             const commentReplyBody = replyCommentBody;
              
              // Показываем поле ввода только для текущего комментария
              replyInput.style.display = 'flex';
@@ -196,6 +219,59 @@ function initAnswersEvent() {
              replyCommentBody.addEventListener('paste', banImage);
              replyCommentBody.addEventListener('paste', banHtmlTag);
              replyCommentBody.addEventListener('input', handleInput);
+
+             currentButton.addEventListener('click', function() {
+                event.preventDefault();
+                let answer = {
+                    name: commentReplyName.textContent,
+                    body: commentReplyBody.innerText,
+                    time: Math.floor(Date.now() / 1000),
+                };
+
+                replyCommentBody.innerText = '';
+                replyInput.style.display = 'none';
+                answers.push(answer);
+                
+                showAnswer(comment);
+             });
+
+             currentButtonExit.addEventListener('click', function() {
+                exitReply(replyInput);
+             });
+             
          });
      });
 }
+
+function showAnswer(comment) {
+    let out = '';
+    answers.forEach(function (item) {
+        out += `<div class="static-comment__reply">
+        <img src="./images/Masturbek.png" alt="Masturbek" class="static-comment__avatar">
+        <div class="second-part-commit">
+            <div class="commit-info">
+                <p class="commit-nickname reply-name">Джунбокс3000</p>
+                <img src="./images/Send.svg" alt="send">
+                <p class="reply-nickname">${item.name}</p>
+                <p class="time">${timeConverter(item.time)}</p>
+            </div>
+            <p class="commit-text">${item.body}</p>
+            <div class="commit-actions">
+                <img src="./images/Empty-heart.svg" alt="heart" class="heart-svg">
+                <p class="favorites">В избранном</p>
+                <img src="./images/Minus.svg" alt="minus" class="minus-svg">
+                <span class="number-likes">0</span>
+                <img src="./images/Plus.svg" alt="plus" class="plus-svg">
+            </div>
+        </div>
+    </div>
+    </div>`;
+    });
+    comment.innerHTML = out;
+}
+
+function exitReply(replyInput) {
+    replyInput.style.display = 'none';
+}
+
+
