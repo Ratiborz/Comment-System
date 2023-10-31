@@ -76,6 +76,9 @@ function showComments() {
                     <button class="send__btn" disabled>Отправить</button>
                     <button class="send__btn svg-cross__btn"><img src="./images/cross-svgrepo-com.svg" alt="cross" class="svg-cross"></button>
                 </div>
+                <div class="reply-field">
+
+                </div>
     </div>`;
     });
     commentField.innerHTML = out;
@@ -236,7 +239,7 @@ function initAnswersEvent() {
              });
 
              currentButtonExit.addEventListener('click', function() {
-                exitReply(replyInput);
+                exitReply(replyInput, replyCommentBody);
              });
              
          });
@@ -244,34 +247,35 @@ function initAnswersEvent() {
 }
 
 function showAnswer(comment) {
+    let replyField = comment.querySelector('.reply-field');
     let out = '';
     answers.forEach(function (item) {
-        out += `<div class="static-comment__reply">
-        <img src="./images/Masturbek.png" alt="Masturbek" class="static-comment__avatar">
-        <div class="second-part-commit">
-            <div class="commit-info">
-                <p class="commit-nickname reply-name">Джунбокс3000</p>
-                <img src="./images/Send.svg" alt="send">
-                <p class="reply-nickname">${item.name}</p>
-                <p class="time">${timeConverter(item.time)}</p>
-            </div>
-            <p class="commit-text">${item.body}</p>
-            <div class="commit-actions">
-                <img src="./images/Empty-heart.svg" alt="heart" class="heart-svg">
-                <p class="favorites">В избранном</p>
-                <img src="./images/Minus.svg" alt="minus" class="minus-svg">
-                <span class="number-likes">0</span>
-                <img src="./images/Plus.svg" alt="plus" class="plus-svg">
-            </div>
-        </div>
-    </div>
-    </div>`;
+            out += `<div class="static-comment__reply">
+                <img src="./images/Masturbek.png" alt="Masturbek" class="static-comment__avatar">
+                <div class="second-part-commit">
+                    <div class="commit-info">
+                        <p class="commit-nickname reply-name">Джунбокс3000</p>
+                        <img src="./images/Send.svg" alt="send">
+                        <p class="reply-nickname">${item.name}</p>
+                        <p class="time">${timeConverter(item.time)}</p>
+                    </div>
+                    <p class="commit-text">${item.body}</p>
+                    <div class="commit-actions">
+                        <img src="./images/Empty-heart.svg" alt="heart" class="heart-svg">
+                        <p class="favorites">В избранном</p>
+                        <img src="./images/Minus.svg" alt="minus" class="minus-svg">
+                        <span class="number-likes">0</span>
+                        <img src="./images/Plus.svg" alt="plus" class="plus-svg">
+                    </div>
+                </div>
+            </div>`;
     });
-    comment.innerHTML = out;
+    replyField.innerHTML = out;
 }
 
-function exitReply(replyInput) {
+function exitReply(replyInput, replyCommentBody) {
     replyInput.style.display = 'none';
+    replyCommentBody.innerText = '';
 }
 
 
