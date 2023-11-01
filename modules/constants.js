@@ -5,5 +5,3 @@ export const button = document.querySelector('.send__btn');
 export const symbolsLimit = document.querySelector('.writing-comments__info--prohibition');
 export const placeholder = document.querySelector('.placeholder');
 
-export const commitNickname = document.querySelector('.reply-name');
-export const replyNickname = document.querySelector('.reply-nickname');

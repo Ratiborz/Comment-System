@@ -84,6 +84,7 @@ function showComments() {
     
     commentField.innerHTML = out;
     initAnswersEvent();
+    numbOfComments();
 }
 
 commentBody.addEventListener('input', handleInput);
@@ -236,8 +237,8 @@ function initAnswersEvent() {
                 replyCommentBody.innerText = '';
                 replyInput.style.display = 'none';
                 comments[commentIndex].answers.push(answer);
-                console.log(comments[commentIndex])
-                
+                saveComments();
+                showComments();
              });
 
              currentButtonExit.addEventListener('click', function() {
@@ -278,3 +279,22 @@ function exitReply(replyInput, replyCommentBody) {
     replyInput.style.display = 'none';
     replyCommentBody.innerText = '';
 }
+
+function numbOfComments() { 
+let commentCount = 0;
+let replyCount = 0;
+
+for (let i = 0; i < comments.length; i++) {
+  commentCount++;
+
+  const replies = comments[i].answers;
+
+  for (let j = 0; j < replies.length; j++) {
+    replyCount++;
+  }
+}
+const countCommentsAndAnswers = document.querySelector('.number');
+
+countCommentsAndAnswers.innerHTML = commentCount + replyCount;
+}
+
