@@ -7,8 +7,8 @@ import {
 } from './constants.js';
 
 let comments = [];
-let answers = [];
 loadComments();
+console.log(comments)
 
 document.querySelector('.send__btn').addEventListener('click',  function() {
     event.preventDefault();
@@ -16,6 +16,7 @@ document.querySelector('.send__btn').addEventListener('click',  function() {
         name: commentName.textContent,
         body: commentBody.innerText,
         time: Math.floor(Date.now() / 1000),
+        answers: [], 
     };
     commentBody.innerText = '';
     comments.push(comment);
@@ -42,9 +43,10 @@ function loadComments() {
 
 function showComments() {
     let commentField = document.getElementById('comment-field');
+    let commentIndex = 0;
     let out = '';
     comments.forEach(function (item) {
-        out += `<div class="static-comment">
+        out += `<div class="static-comment" data-index="${commentIndex++}">
             <div class="static-comment__flex">
             <img src="./images/Max.png" alt="Max" class="avatar">
             <div class="second-part-commit">
@@ -76,11 +78,10 @@ function showComments() {
                     <button class="send__btn" disabled>Отправить</button>
                     <button class="send__btn svg-cross__btn"><img src="./images/cross-svgrepo-com.svg" alt="cross" class="svg-cross"></button>
                 </div>
-                <div class="reply-field">
-
-                </div>
+                <div class="reply-field">${showAnswer(item.answers)}</div>
     </div>`;
     });
+    
     commentField.innerHTML = out;
     initAnswersEvent();
 }
@@ -215,6 +216,7 @@ function initAnswersEvent() {
              const currentButtonExit = comment.querySelector('.svg-cross__btn');
              const commentReplyName = comment.querySelector('.commit-nickname');
              const commentReplyBody = replyCommentBody;
+             let commentIndex = comment.getAttribute('data-index');
              
              // Показываем поле ввода только для текущего комментария
              replyInput.style.display = 'flex';
@@ -233,9 +235,9 @@ function initAnswersEvent() {
 
                 replyCommentBody.innerText = '';
                 replyInput.style.display = 'none';
-                answers.push(answer);
+                comments[commentIndex].answers.push(answer);
+                console.log(comments[commentIndex])
                 
-                showAnswer(comment);
              });
 
              currentButtonExit.addEventListener('click', function() {
@@ -246,20 +248,19 @@ function initAnswersEvent() {
      });
 }
 
-function showAnswer(comment) {
-    let replyField = comment.querySelector('.reply-field');
+function showAnswer(answers) {
     let out = '';
-    answers.forEach(function (item) {
+    answers.forEach(function (answer) {
             out += `<div class="static-comment__reply">
                 <img src="./images/Masturbek.png" alt="Masturbek" class="static-comment__avatar">
                 <div class="second-part-commit">
                     <div class="commit-info">
                         <p class="commit-nickname reply-name">Джунбокс3000</p>
                         <img src="./images/Send.svg" alt="send">
-                        <p class="reply-nickname">${item.name}</p>
-                        <p class="time">${timeConverter(item.time)}</p>
+                        <p class="reply-nickname">${answer.name}</p>
+                        <p class="time">${timeConverter(answer.time)}</p>
                     </div>
-                    <p class="commit-text">${item.body}</p>
+                    <p class="commit-text">${answer.body}</p>
                     <div class="commit-actions">
                         <img src="./images/Empty-heart.svg" alt="heart" class="heart-svg">
                         <p class="favorites">В избранном</p>
@@ -269,13 +270,11 @@ function showAnswer(comment) {
                     </div>
                 </div>
             </div>`;
-    });
-    replyField.innerHTML = out;
+        });
+    return out;
 }
 
 function exitReply(replyInput, replyCommentBody) {
     replyInput.style.display = 'none';
     replyCommentBody.innerText = '';
 }
-
-
