@@ -1,9 +1,8 @@
 import {commentName, commentBody, button, symbolsLimit, placeholder,} from './constants.js';
-import {timeConverter} from './timeConverter.js';
 import {handleInput, banImage, banHtmlTag} from './inputProcessing.js';
+import {timeConverter, numbOfComments} from './utils.js';
 
-
-let comments = [];
+export let comments = [];
 loadComments();
 
 document.querySelector('.send__btn').addEventListener('click',  function() {
@@ -12,7 +11,8 @@ document.querySelector('.send__btn').addEventListener('click',  function() {
         name: commentName.textContent,
         body: commentBody.innerText,
         time: Math.floor(Date.now() / 1000),
-        answers: [], 
+        answers: [],
+        rating: 0, 
     };
     commentBody.innerText = '';
     comments.push(comment);
@@ -87,11 +87,6 @@ commentBody.addEventListener('input', (event) => handleInput(event));
 commentBody.addEventListener('paste', (event) => banImage(event));
 commentBody.addEventListener('paste', (event) => banHtmlTag(event));
 
-timeConverter();
-handleInput();
-banImage();
-banHtmlTag();
-
 function initAnswersEvent() {
     const replyButtons = document.querySelectorAll('.commit-reply');
     
@@ -126,6 +121,7 @@ function initAnswersEvent() {
                     name: commentReplyName.textContent,
                     body: commentReplyBody.innerText,
                     time: Math.floor(Date.now() / 1000),
+                    rating: 0,
                 };
 
                 replyCommentBody.innerText = '';
@@ -174,21 +170,32 @@ function exitReply(replyInput, replyCommentBody) {
     replyCommentBody.innerText = '';
 }
 
-function numbOfComments() { 
-let commentCount = 0;
-let replyCount = 0;
+const plusButtons = document.querySelectorAll('.plus-svg');
+const minusButtons = document.querySelectorAll('.minus-svg');
 
-for (let i = 0; i < comments.length; i++) {
-  commentCount++;
 
-  const replies = comments[i].answers;
+plusButtons.forEach((plusButton) => {
+    plusButton.addEventListener('click', function() {
+        ratingCount(this, 'plus');
+    });
+})
 
-  for (let j = 0; j < replies.length; j++) {
-    replyCount++;
-  }
+minusButtons.forEach((minusButton) => {
+    minusButton.addEventListener('click', function() {
+        ratingCount(this, 'minus');
+    });
+})
+ 
+
+function ratingCount(element, value) {
+    const comment = element.parentNode.parentNode.parentNode.parentNode.closest('.static-comment');
+    let commentIndex = comment.getAttribute('data-index');
+
+    if (value === 'plus') {
+        comments[commentIndex].rating += 1;
+        console.log(comments[commentIndex].rating)
+    }else if (value === 'minus') {
+        comments[commentIndex].rating -= 1;
+        console.log(comments[commentIndex].rating)
+    }
 }
-const countCommentsAndAnswers = document.querySelector('.number');
-
-countCommentsAndAnswers.innerHTML = commentCount + replyCount;
-}
-
