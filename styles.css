@@ -261,6 +261,7 @@ main {
 
 .commit-actions {
     display: flex;
+    align-items: center;
 }
 
 .commit-nickname {

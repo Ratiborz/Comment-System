@@ -57,7 +57,7 @@ function showComments() {
                     <img src="./images/Empty-heart.svg" alt="heart" class="heart-svg">
                     <p class="favorites">В избранном</p>
                     <img src="./images/Minus.svg" alt="minus" class="minus-svg">
-                    <span class="number-likes">0</span>
+                    <span class="number-likes">${item.rating}</span>
                     <img src="./images/Plus.svg" alt="plus" class="plus-svg">
                 </div>
             </div>
@@ -141,8 +141,9 @@ function initAnswersEvent() {
 
 function showAnswer(answers) {
     let out = '';
+    let commentIndex = 0;
     answers.forEach(function (answer) {
-            out += `<div class="static-comment__reply">
+            out += `<div class="static-comment__reply" data-index="${commentIndex++}">
                 <img src="./images/Masturbek.png" alt="Masturbek" class="static-comment__avatar">
                 <div class="second-part-commit">
                     <div class="commit-info">
@@ -156,7 +157,7 @@ function showAnswer(answers) {
                         <img src="./images/Empty-heart.svg" alt="heart" class="heart-svg">
                         <p class="favorites">В избранном</p>
                         <img src="./images/Minus.svg" alt="minus" class="minus-svg">
-                        <span class="number-likes">0</span>
+                        <span class="number-likes">${answer.rating}</span>
                         <img src="./images/Plus.svg" alt="plus" class="plus-svg">
                     </div>
                 </div>
@@ -173,7 +174,6 @@ function exitReply(replyInput, replyCommentBody) {
 const plusButtons = document.querySelectorAll('.plus-svg');
 const minusButtons = document.querySelectorAll('.minus-svg');
 
-
 plusButtons.forEach((plusButton) => {
     plusButton.addEventListener('click', function() {
         ratingCount(this, 'plus');
@@ -186,16 +186,37 @@ minusButtons.forEach((minusButton) => {
     });
 })
  
-
-function ratingCount(element, value) {
+function ratingCount(element, symbol) {
     const comment = element.parentNode.parentNode.parentNode.parentNode.closest('.static-comment');
+    const keyAnswer = element.parentNode.parentNode.parentNode;
     let commentIndex = comment.getAttribute('data-index');
+    let answerIndex = keyAnswer.getAttribute('data-index');
 
-    if (value === 'plus') {
-        comments[commentIndex].rating += 1;
-        console.log(comments[commentIndex].rating)
-    }else if (value === 'minus') {
-        comments[commentIndex].rating -= 1;
-        console.log(comments[commentIndex].rating)
+    if (keyAnswer.classList.value === 'static-comment__reply' && symbol === 'plus') {
+        comments[commentIndex].answers[answerIndex].rating += 1;
+        console.log(comments[commentIndex].answers[answerIndex])
+        showComments();
+        saveComments();
+    }
+    else if (keyAnswer.classList.value === 'static-comment__reply' && symbol === 'minus') {
+        comments[commentIndex].answers[answerIndex].rating -= 1;
+        console.log(comments[commentIndex].answers[answerIndex])
+        showComments();
+        saveComments();
+    }
+    
+    if (keyAnswer.classList.value !== 'static-comment__reply') {
+        if (comment.classList.value === 'static-comment' && symbol === 'plus') {
+            comments[commentIndex].rating += 1;
+            console.log(comments[commentIndex]);
+            showComments();
+            saveComments();
+        } 
+        else if (comment.classList.value === 'static-comment' && symbol === 'minus') {
+            comments[commentIndex].rating -= 1;
+            console.log(comments[commentIndex]);
+            showComments();
+            saveComments();
+        }
     }
 }
