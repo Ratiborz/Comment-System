@@ -1,8 +1,10 @@
 import {commentName, commentBody, button, symbolsLimit, placeholder,} from './constants.js';
 import {handleInput, banImage, banHtmlTag} from './inputProcessing.js';
 import {timeConverter, numbOfComments} from './utils.js';
+import {ratingCount} from './rating.js';
 
 export let comments = [];
+let favorites = []; 
 loadComments();
 
 document.querySelector('.send__btn').addEventListener('click',  function() {
@@ -28,7 +30,7 @@ document.querySelector('.send__btn').addEventListener('click',  function() {
     placeholder.style.display = 'block';
 });
 
-function saveComments() {
+export function saveComments() {
     localStorage.setItem('comments', JSON.stringify(comments));
 }
 
@@ -39,10 +41,12 @@ function loadComments() {
 
 function showComments() {
     let commentField = document.getElementById('comment-field');
-    let commentIndex = 0;
+    //зачем это ? у вас есть и так индексы все
+    // let commentIndex = 0;
+    //commentIndex это в цикле будет индекс
     let out = '';
-    comments.forEach(function (item) {
-        out += `<div class="static-comment" data-index="${commentIndex++}">
+    comments.forEach(function (item, commentIndex ) {
+        out += `<div class="static-comment" data-index="${commentIndex}">
             <div class="static-comment__flex">
             <img src="./images/Max.png" alt="Max" class="avatar">
             <div class="second-part-commit">
@@ -56,9 +60,9 @@ function showComments() {
                     <p class="commit-reply">Ответить</p>
                     <img src="./images/Empty-heart.svg" alt="heart" class="heart-svg">
                     <p class="favorites">В избранном</p>
-                    <img src="./images/Minus.svg" alt="minus" class="minus-svg">
+                    <img src="./images/Minus.svg" alt="minus" data-parent="${commentIndex}" class="minus-svg">
                     <span class="number-likes">${item.rating}</span>
-                    <img src="./images/Plus.svg" alt="plus" class="plus-svg">
+                    <img src="./images/Plus.svg" alt="plus" data-parent="${commentIndex}" class="plus-svg">
                 </div>
             </div>
         </div>
@@ -74,7 +78,7 @@ function showComments() {
                     <button class="send__btn" disabled>Отправить</button>
                     <button class="send__btn svg-cross__btn"><img src="./images/cross-svgrepo-com.svg" alt="cross" class="svg-cross"></button>
                 </div>
-                <div class="reply-field">${showAnswer(item.answers)}</div>
+                <div class="reply-field">${showAnswer(item.answers, commentIndex)}</div>
     </div>`;
     });
     
@@ -138,12 +142,14 @@ function initAnswersEvent() {
          });
      });
 }
-
-function showAnswer(answers) {
+//commentParent мы передали , это индекс родителя
+function showAnswer(answers, commentParent) {
     let out = '';
-    let commentIndex = 0;
-    answers.forEach(function (answer) {
-            out += `<div class="static-comment__reply" data-index="${commentIndex++}">
+    //тут тоже не надо
+    // let commentIndex = 0;
+    //indexAnswer это в цикле будет индекс
+    answers.forEach(function (answer, indexAnswer) {
+            out += `<div class="static-comment__reply" data-index="${indexAnswer}">
                 <img src="./images/Masturbek.png" alt="Masturbek" class="static-comment__avatar">
                 <div class="second-part-commit">
                     <div class="commit-info">
@@ -156,9 +162,9 @@ function showAnswer(answers) {
                     <div class="commit-actions">
                         <img src="./images/Empty-heart.svg" alt="heart" class="heart-svg">
                         <p class="favorites">В избранном</p>
-                        <img src="./images/Minus.svg" alt="minus" class="minus-svg">
+                        <img src="./images/Minus.svg" alt="minus" data-index="${indexAnswer}" data-parent="${commentParent}" class="minus-svg">
                         <span class="number-likes">${answer.rating}</span>
-                        <img src="./images/Plus.svg" alt="plus" class="plus-svg">
+                        <img src="./images/Plus.svg" alt="plus" data-index="${indexAnswer}" data-parent="${commentParent}" class="plus-svg">
                     </div>
                 </div>
             </div>`;
@@ -171,52 +177,21 @@ function exitReply(replyInput, replyCommentBody) {
     replyCommentBody.innerText = '';
 }
 
-const plusButtons = document.querySelectorAll('.plus-svg');
-const minusButtons = document.querySelectorAll('.minus-svg');
+document.addEventListener('click', function(event) {
+    const target = event.target;
 
-plusButtons.forEach((plusButton) => {
-    plusButton.addEventListener('click', function() {
-        ratingCount(this, 'plus');
-    });
-})
-
-minusButtons.forEach((minusButton) => {
-    minusButton.addEventListener('click', function() {
-        ratingCount(this, 'minus');
-    });
-})
- 
-function ratingCount(element, symbol) {
-    const comment = element.parentNode.parentNode.parentNode.parentNode.closest('.static-comment');
-    const keyAnswer = element.parentNode.parentNode.parentNode;
-    let commentIndex = comment.getAttribute('data-index');
-    let answerIndex = keyAnswer.getAttribute('data-index');
-
-    if (keyAnswer.classList.value === 'static-comment__reply' && symbol === 'plus') {
-        comments[commentIndex].answers[answerIndex].rating += 1;
-        console.log(comments[commentIndex].answers[answerIndex])
-        showComments();
-        saveComments();
-    }
-    else if (keyAnswer.classList.value === 'static-comment__reply' && symbol === 'minus') {
-        comments[commentIndex].answers[answerIndex].rating -= 1;
-        console.log(comments[commentIndex].answers[answerIndex])
-        showComments();
-        saveComments();
+    // Проверяем, является ли кликнутый элемент кнопкой плюс
+    if (target.matches('.plus-svg')) {
+      ratingCount(target, 'plus');
     }
     
-    if (keyAnswer.classList.value !== 'static-comment__reply') {
-        if (comment.classList.value === 'static-comment' && symbol === 'plus') {
-            comments[commentIndex].rating += 1;
-            console.log(comments[commentIndex]);
-            showComments();
-            saveComments();
-        } 
-        else if (comment.classList.value === 'static-comment' && symbol === 'minus') {
-            comments[commentIndex].rating -= 1;
-            console.log(comments[commentIndex]);
-            showComments();
-            saveComments();
-        }
-    }
-}
+    // Проверяем, является ли кликнутый элемент кнопкой минус
+    if (target.matches('.minus-svg')) {
+      ratingCount(target, 'minus');
+    } 
+
+    if (target.matches('.favorites')) {
+        favoritesCount(target);
+      }
+});
+
