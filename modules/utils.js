@@ -28,5 +28,5 @@ export function numbOfComments() {
     }
     const countCommentsAndAnswers = document.querySelector('.number');
     
-    countCommentsAndAnswers.innerHTML = commentCount + replyCount;
+    countCommentsAndAnswers.innerHTML = `(${commentCount + replyCount})`;
 }

@@ -41,9 +41,6 @@ function loadComments() {
 
 function showComments() {
     let commentField = document.getElementById('comment-field');
-    //зачем это ? у вас есть и так индексы все
-    // let commentIndex = 0;
-    //commentIndex это в цикле будет индекс
     let out = '';
     comments.forEach(function (item, commentIndex ) {
         out += `<div class="static-comment" data-index="${commentIndex}">
@@ -145,9 +142,6 @@ function initAnswersEvent() {
 //commentParent мы передали , это индекс родителя
 function showAnswer(answers, commentParent) {
     let out = '';
-    //тут тоже не надо
-    // let commentIndex = 0;
-    //indexAnswer это в цикле будет индекс
     answers.forEach(function (answer, indexAnswer) {
             out += `<div class="static-comment__reply" data-index="${indexAnswer}">
                 <img src="./images/Masturbek.png" alt="Masturbek" class="static-comment__avatar">
@@ -195,3 +189,18 @@ document.addEventListener('click', function(event) {
       }
 });
 
+function favoritesCount(target) {
+    const imageFavorites = target.parentNode.querySelector('.heart-svg');
+    const firstImage = '/images/Only-heart.svg'; 
+    const secondImage = '/images/Empty-heart.svg';
+    const firstImagePath = imageFavorites.src.slice(-firstImage.length);
+    const secondImagePath = imageFavorites.src.slice(-secondImage.length);
+    console.log(target.parentNode.parentNode.parentNode.parentNode)
+    
+    if (firstImagePath === firstImage) {
+        imageFavorites.src = secondImage;
+        favorites.push()
+    } else if (secondImagePath === secondImage) {
+        imageFavorites.src = firstImage;
+    }
+}
