@@ -185,22 +185,39 @@ document.addEventListener('click', function(event) {
     } 
 
     if (target.matches('.favorites')) {
-        favoritesCount(target);
+        favoritesImage(target);
       }
 });
 
-function favoritesCount(target) {
+function favoritesImage(target) {
     const imageFavorites = target.parentNode.querySelector('.heart-svg');
     const firstImage = '/images/Only-heart.svg'; 
     const secondImage = '/images/Empty-heart.svg';
     const firstImagePath = imageFavorites.src.slice(-firstImage.length);
     const secondImagePath = imageFavorites.src.slice(-secondImage.length);
-    console.log(target.parentNode.parentNode.parentNode.parentNode)
     
     if (firstImagePath === firstImage) {
         imageFavorites.src = secondImage;
-        favorites.push()
-    } else if (secondImagePath === secondImage) {
+        favoritesRegistration(target);
+    } 
+    else if (secondImagePath === secondImage) {
         imageFavorites.src = firstImage;
+        favoritesRegistration(target);
     }
+}
+
+function favoritesRegistration(target) {
+    const favoritesComment = target.parentNode.parentNode.parentNode.parentNode;
+    const favoritesAnswer = target.parentNode.parentNode.parentNode;
+    
+    if (favoritesComment.classList.value === 'static-comment') {
+        favorites.push(favoritesComment);
+        console.log(favorites);
+    } else {
+        favorites.push(favoritesAnswer);
+        console.log(favorites)
+        console.log(favorites[3])
+    }
+
+    //console.log(favoritesComment);
 }
