@@ -4,7 +4,6 @@ import {timeConverter, numbOfComments} from './utils.js';
 import {ratingCount} from './rating.js';
 
 export let comments = [];
-let favorites = []; 
 loadComments();
 
 document.querySelector('.send__btn').addEventListener('click',  function() {
@@ -15,6 +14,7 @@ document.querySelector('.send__btn').addEventListener('click',  function() {
         time: Math.floor(Date.now() / 1000),
         answers: [],
         rating: 0, 
+        is_favorite: false, 
     };
     commentBody.innerText = '';
     comments.push(comment);
@@ -123,6 +123,7 @@ function initAnswersEvent() {
                     body: commentReplyBody.innerText,
                     time: Math.floor(Date.now() / 1000),
                     rating: 0,
+                    is_favorite: false,
                 };
 
                 replyCommentBody.innerText = '';
@@ -184,9 +185,15 @@ document.addEventListener('click', function(event) {
       ratingCount(target, 'minus');
     } 
 
+    // Добавление в избранное
     if (target.matches('.favorites')) {
         favoritesImage(target);
-      }
+    }
+
+    // Вывод на экран избранных комментариев
+    if (target.matches('.favourites')) {
+        drawFavorites();
+    }
 });
 
 function favoritesImage(target) {
@@ -209,15 +216,52 @@ function favoritesImage(target) {
 function favoritesRegistration(target) {
     const favoritesComment = target.parentNode.parentNode.parentNode.parentNode;
     const favoritesAnswer = target.parentNode.parentNode.parentNode;
+    const ParentAnswer = target.parentNode.parentNode.parentNode.parentNode.parentNode;
+    const indexAnswerParent = ParentAnswer.getAttribute('data-index')
+    const indexComment = favoritesComment.getAttribute('data-index');
+    const indexAnswer = favoritesAnswer.getAttribute('data-index'); 
     
     if (favoritesComment.classList.value === 'static-comment') {
-        favorites.push(favoritesComment);
-        console.log(favorites);
-    } else {
-        favorites.push(favoritesAnswer);
-        console.log(favorites)
-        console.log(favorites[3])
+        if (comments[indexComment].is_favorite === false) {
+            comments[indexComment].is_favorite = true;
+        }
+        else if (comments[indexComment].is_favorite === true) {
+            comments[indexComment].is_favorite = false;
+        }
     }
+    else if (favoritesAnswer.classList.value === 'static-comment__reply') {
+        if (comments[indexAnswerParent].answers[indexAnswer].is_favorite === false) {
+            comments[indexAnswerParent].answers[indexAnswer].is_favorite = true;
+        }
+        else if (comments[indexAnswerParent].answers[indexAnswer].is_favorite === true) {
+            comments[indexAnswerParent].answers[indexAnswer].is_favorite = false;
+        }
+    }
+}
 
-    //console.log(favoritesComment);
+function drawFavorites() {
+    const commentField = document.getElementById('comment-field');
+    const staticComment = document.querySelectorAll('.static-comment');
+    const staticCommentRepl = document.querySelectorAll('.static-comment__reply');
+    console.log(commentField);
+    console.log(commentField.style.display === 'none');
+    
+    if (commentField.style.display === 'block') {
+        commentField.style.display = 'none';
+        staticComment.forEach(function (item) {
+            item.style.display = 'none';
+        })
+        staticCommentRepl.forEach(function (item) {
+            item.style.display = 'none';
+        })
+    }
+    else if (commentField.style.display === 'none') {
+        commentField.style.display = 'block';
+        staticComment.forEach(function (item) {
+            item.style.display = 'block';
+        })
+        staticCommentRepl.forEach(function (item) {
+            item.style.display = 'block';
+        })
+    }
 }
