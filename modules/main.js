@@ -240,28 +240,25 @@ function favoritesRegistration(target) {
 }
 
 function drawFavorites() {
-    const commentField = document.getElementById('comment-field');
-    const staticComment = document.querySelectorAll('.static-comment');
-    const staticCommentRepl = document.querySelectorAll('.static-comment__reply');
-    console.log(commentField);
-    console.log(commentField.style.display === 'none');
+    const commentFields = document.querySelectorAll('.comment-field');
+    const staticComments = document.querySelectorAll('.static-comment');
+    const staticCommentReplies = document.querySelectorAll('.static-comment__reply');
+    //console.log(commentField);
+    //console.log(commentField.style.display.value);
+
+    commentFields.forEach(function(commentField) {
+        if (commentField.style.display === 'flex') {
+            commentField.style.display = 'none';
+        } else if (commentField.style.display === 'none') {
+            commentField.style.display = 'flex';
+        }
+    });
     
-    if (commentField.style.display === 'block') {
-        commentField.style.display = 'none';
-        staticComment.forEach(function (item) {
-            item.style.display = 'none';
-        })
-        staticCommentRepl.forEach(function (item) {
-            item.style.display = 'none';
-        })
-    }
-    else if (commentField.style.display === 'none') {
-        commentField.style.display = 'block';
-        staticComment.forEach(function (item) {
-            item.style.display = 'block';
-        })
-        staticCommentRepl.forEach(function (item) {
-            item.style.display = 'block';
-        })
-    }
+    staticComments.forEach(function(staticComment) {
+        staticComment.style.display = commentFields[0].style.display;
+    });
+    
+    staticCommentReplies.forEach(function(staticCommentReply) {
+        staticCommentReply.style.display = commentFields[0].style.display;
+    });
 }
