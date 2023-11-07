@@ -240,25 +240,30 @@ function favoritesRegistration(target) {
 }
 
 function drawFavorites() {
-    const commentFields = document.querySelectorAll('.comment-field');
-    const staticComments = document.querySelectorAll('.static-comment');
-    const staticCommentReplies = document.querySelectorAll('.static-comment__reply');
-    //console.log(commentField);
-    //console.log(commentField.style.display.value);
+    const commentField = document.getElementById('comment-field');
+    const staticComment = document.querySelectorAll('.static-comment');
+    const staticCommentReply = document.querySelectorAll('.static-comment__reply');
+    const displayValue = getComputedStyle(commentField).display;
 
-    commentFields.forEach(function(commentField) {
-        if (commentField.style.display === 'flex') {
-            commentField.style.display = 'none';
-        } else if (commentField.style.display === 'none') {
-            commentField.style.display = 'flex';
-        }
-    });
-    
-    staticComments.forEach(function(staticComment) {
-        staticComment.style.display = commentFields[0].style.display;
-    });
-    
-    staticCommentReplies.forEach(function(staticCommentReply) {
-        staticCommentReply.style.display = commentFields[0].style.display;
-    });
+    if (displayValue === 'flex') {
+        commentField.style.display = 'none';
+        staticComment.forEach(function(comment) {
+            comment.style.display = 'none';
+        })
+        staticCommentReply.forEach(function(commentReply) {
+            commentReply.style.display = 'none';
+        })
+        
+
+        console.log(comments)
+    } 
+    else if (displayValue === 'none') {
+        commentField.style.display = 'flex';
+        staticComment.forEach(function(comment) {
+            comment.style.display = 'flex';
+        })
+        staticCommentReply.forEach(function(commentReply) {
+            commentReply.style.display = 'flex';
+        })
+    }
 }
