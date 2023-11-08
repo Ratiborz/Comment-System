@@ -140,7 +140,7 @@ function initAnswersEvent() {
          });
      });
 }
-//commentParent мы передали , это индекс родителя
+
 function showAnswer(answers, commentParent) {
     let out = '';
     answers.forEach(function (answer, indexAnswer) {
@@ -187,7 +187,7 @@ document.addEventListener('click', function(event) {
 
     // Добавление в избранное
     if (target.matches('.favorites')) {
-        favoritesImage(target);
+        favoritesRegistration(target);
     }
 
     // Вывод на экран избранных комментариев
@@ -196,48 +196,59 @@ document.addEventListener('click', function(event) {
     }
 });
 
-function favoritesImage(target) {
-    const imageFavorites = target.parentNode.querySelector('.heart-svg');
-    const firstImage = '/images/Only-heart.svg'; 
-    const secondImage = '/images/Empty-heart.svg';
-    const firstImagePath = imageFavorites.src.slice(-firstImage.length);
-    const secondImagePath = imageFavorites.src.slice(-secondImage.length);
-    
-    if (firstImagePath === firstImage) {
-        imageFavorites.src = secondImage;
-        favoritesRegistration(target);
-    } 
-    else if (secondImagePath === secondImage) {
-        imageFavorites.src = firstImage;
-        favoritesRegistration(target);
-    }
-}
-
 function favoritesRegistration(target) {
     const favoritesComment = target.parentNode.parentNode.parentNode.parentNode;
     const favoritesAnswer = target.parentNode.parentNode.parentNode;
     const ParentAnswer = target.parentNode.parentNode.parentNode.parentNode.parentNode;
-    const indexAnswerParent = ParentAnswer.getAttribute('data-index')
+    const indexAnswerParent = ParentAnswer.getAttribute('data-index');
     const indexComment = favoritesComment.getAttribute('data-index');
     const indexAnswer = favoritesAnswer.getAttribute('data-index'); 
+
+    const imageFavorites = target.parentNode.querySelector('.heart-svg');
+    const firstImage = '/images/Only-heart.svg'; 
+    const secondImage = '/images/Empty-heart.svg';
     
     if (favoritesComment.classList.value === 'static-comment') {
         if (comments[indexComment].is_favorite === false) {
             comments[indexComment].is_favorite = true;
+            imageFavorites.src = firstImage;
         }
         else if (comments[indexComment].is_favorite === true) {
             comments[indexComment].is_favorite = false;
+            imageFavorites.src = secondImage;
         }
     }
     else if (favoritesAnswer.classList.value === 'static-comment__reply') {
         if (comments[indexAnswerParent].answers[indexAnswer].is_favorite === false) {
             comments[indexAnswerParent].answers[indexAnswer].is_favorite = true;
+            imageFavorites.src = firstImage;
         }
         else if (comments[indexAnswerParent].answers[indexAnswer].is_favorite === true) {
             comments[indexAnswerParent].answers[indexAnswer].is_favorite = false;
+            imageFavorites.src = secondImage;
         }
     }
+    console.log(comments)
+    localStorage.setItem('comments', JSON.stringify(comments));
 }
+
+function pasteImageFavorites() {
+    const savedComments = JSON.parse(localStorage.getItem('comments'));
+    let commentField = document.querySelectorAll('.comment-field'); 
+    console.log(savedComments, savedComments.length)
+
+    savedComments.forEach(function(comment) {
+        let commentIndex = comment.length - 1;
+        let commentObj = document.querySelector('[data-index="' + commentIndex + '"]');
+        console.log(commentObj)
+
+        if (comment.is_favorite) {
+
+        }
+    })
+    
+}
+pasteImageFavorites();
 
 function drawFavorites() {
     const commentField = document.getElementById('comment-field');
@@ -253,9 +264,7 @@ function drawFavorites() {
         staticCommentReply.forEach(function(commentReply) {
             commentReply.style.display = 'none';
         })
-        
 
-        console.log(comments)
     } 
     else if (displayValue === 'none') {
         commentField.style.display = 'flex';
