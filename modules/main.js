@@ -37,6 +37,7 @@ export function saveComments() {
 function loadComments() {
     if (localStorage.getItem('comments')) comments = JSON.parse(localStorage.getItem('comments'));
     showComments();
+    pasteImageFavorites();
 }
 
 function showComments() {
@@ -228,27 +229,38 @@ function favoritesRegistration(target) {
             imageFavorites.src = secondImage;
         }
     }
-    console.log(comments)
-    localStorage.setItem('comments', JSON.stringify(comments));
+    saveComments();
 }
 
 function pasteImageFavorites() {
     const savedComments = JSON.parse(localStorage.getItem('comments'));
-    let commentField = document.querySelectorAll('.comment-field'); 
-    console.log(savedComments, savedComments.length)
+    const firstImage = '/images/Only-heart.svg'; 
+    const secondImage = '/images/Empty-heart.svg';
 
-    savedComments.forEach(function(comment) {
-        let commentIndex = comment.length - 1;
-        let commentObj = document.querySelector('[data-index="' + commentIndex + '"]');
-        console.log(commentObj)
+    savedComments.forEach(function(comment, index) {
+        let commentObj = document.querySelector('[data-index="' + index + '"]');
+        const imageFavorites = commentObj.querySelector('.heart-svg');
 
         if (comment.is_favorite) {
-
+            imageFavorites.src = firstImage;
         }
+        else if (!comment.is_favorite) {
+            imageFavorites.src = secondImage;
+        }
+        
+        comment.answers.forEach(function(answer, index) {
+            let answerObj = commentObj.querySelector('[data-index="' + index + '"]');
+            const answerImage = answerObj.querySelector('.heart-svg');
+
+            if (answer.is_favorite) {
+                answerImage.src = firstImage;
+            }
+            else if (!answer.is_favorite) {
+                answerImage.src = secondImage;
+            }
+        }) 
     })
-    
 }
-pasteImageFavorites();
 
 function drawFavorites() {
     const commentField = document.getElementById('comment-field');
