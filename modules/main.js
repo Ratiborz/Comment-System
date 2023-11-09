@@ -4,6 +4,8 @@ import {timeConverter, numbOfComments} from './utils.js';
 import {ratingCount} from './rating.js';
 
 export let comments = [];
+let toggleFavorites = false;
+console.log(toggleFavorites)
 loadComments();
 
 document.querySelector('.send__btn').addEventListener('click',  function() {
@@ -260,31 +262,37 @@ function pasteImageFavorites() {
             }
         }) 
     })
+    console.log(comments)
 }
 
 function drawFavorites() {
-    const commentField = document.getElementById('comment-field');
-    const staticComment = document.querySelectorAll('.static-comment');
-    const staticCommentReply = document.querySelectorAll('.static-comment__reply');
-    const displayValue = getComputedStyle(commentField).display;
+    toggleFavorites = !toggleFavorites; // Переключение состояния
 
-    if (displayValue === 'flex') {
-        commentField.style.display = 'none';
-        staticComment.forEach(function(comment) {
-            comment.style.display = 'none';
-        })
-        staticCommentReply.forEach(function(commentReply) {
-            commentReply.style.display = 'none';
-        })
+    comments.forEach(function(comment, index) {
+        let commentObj = document.querySelector('[data-index="' + index + '"]');
 
-    } 
-    else if (displayValue === 'none') {
-        commentField.style.display = 'flex';
-        staticComment.forEach(function(comment) {
-            comment.style.display = 'flex';
-        })
-        staticCommentReply.forEach(function(commentReply) {
-            commentReply.style.display = 'flex';
-        })
-    }
+        if (toggleFavorites === false) {
+            commentObj.style.display = 'flex';
+            
+            comment.answers.forEach(function(answer, index) {
+                let answerObj = commentObj.querySelector('[data-index="' + index + '"]');
+    
+                 answerObj.style.display = 'flex';
+                
+            })
+        } 
+        else if (toggleFavorites === true) {
+            if (!comment.is_favorite) {
+                commentObj.style.display = 'none';
+            }
+            comment.answers.forEach(function(answer, index) {
+                let answerObj = commentObj.querySelector('[data-index="' + index + '"]');
+    
+                    if (!answer.is_favorite) {
+                    answerObj.style.display = 'none';
+                }
+            }) 
+        }
+    })
+     console.log(toggleFavorites)
 }
