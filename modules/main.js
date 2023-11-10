@@ -5,7 +5,6 @@ import {ratingCount} from './rating.js';
 
 export let comments = [];
 let toggleFavorites = false;
-console.log(toggleFavorites)
 loadComments();
 
 document.querySelector('.send__btn').addEventListener('click',  function() {
@@ -262,7 +261,6 @@ function pasteImageFavorites() {
             }
         }) 
     })
-    console.log(comments)
 }
 
 function drawFavorites() {
@@ -270,29 +268,33 @@ function drawFavorites() {
 
     comments.forEach(function(comment, index) {
         let commentObj = document.querySelector('[data-index="' + index + '"]');
+        const staticCommentFlex = commentObj.querySelector('.static-comment__flex');
+        const replyField = commentObj.querySelector('.reply-field')
 
-        if (toggleFavorites === false) {
-            commentObj.style.display = 'flex';
+        if (toggleFavorites) {
+            if (comment.is_favorite !== true) {
+                staticCommentFlex.style.display = 'none';
+                replyField.style.marginTop = '0px';
+            }
             
             comment.answers.forEach(function(answer, index) {
                 let answerObj = commentObj.querySelector('[data-index="' + index + '"]');
-    
-                 answerObj.style.display = 'flex';
                 
-            })
-        } 
-        else if (toggleFavorites === true) {
-            if (!comment.is_favorite) {
-                commentObj.style.display = 'none';
-            }
-            comment.answers.forEach(function(answer, index) {
-                let answerObj = commentObj.querySelector('[data-index="' + index + '"]');
-    
-                    if (!answer.is_favorite) {
+                if (answer.is_favorite !== true) {
                     answerObj.style.display = 'none';
                 }
+            })
+        } 
+        else if (!toggleFavorites) {
+            
+            staticCommentFlex.style.display = 'flex';
+            replyField.style.marginTop = '30px';
+            
+            comment.answers.forEach(function(answer, index) {
+                let answerObj = commentObj.querySelector('[data-index="' + index + '"]');
+                answerObj.style.display = 'flex';
             }) 
+            
         }
     })
-     console.log(toggleFavorites)
 }
