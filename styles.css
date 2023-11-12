@@ -423,15 +423,21 @@ ul, li {
 }
 
 .drop-down__list--li {
-    color: #000;
+    display: flex;
+    align-items: center;
+    position: relative;
     font-family: Inter;
     font-size: 16px;
     font-weight: 400;
     line-height: normal;
-    opacity: 0.4;
     padding-bottom: 5px;
     cursor: pointer;
 
+}
+
+.drop-down__list--p {
+    color: #000;
+    opacity: 0.4;
 }
 
 .drop-down__list--li:last-child {
@@ -440,4 +446,10 @@ ul, li {
 
 .drop-down__list--li:hover {
     background-color: #f0f0f0;
-  }
+}
+
+.selected {
+    position: absolute;
+    left: -19px;
+    color: lightgray;
+}

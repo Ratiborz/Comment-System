@@ -5,6 +5,7 @@ import {ratingCount} from './rating.js';
 import {favoritesRegistration, pasteImageFavorites, drawFavorites} from './favouritesSystem.js';
 
 export let comments = [];
+let transformTriangle = false;
 loadComments();
 
 document.querySelector('.send__btn').addEventListener('click',  function() {
@@ -177,7 +178,7 @@ function exitReply(replyInput, replyCommentBody) {
 
 document.addEventListener('click', function(event) {
     const target = event.target;
-
+    
     // Проверяем, является ли кликнутый элемент кнопкой плюс
     if (target.matches('.plus-svg')) {
       ratingCount(target, 'plus');
@@ -204,27 +205,147 @@ document.addEventListener('click', function(event) {
 
         if (displayInfo === 'none') {
             dropDown.style.display = 'block'
-            //target.style.transform = "rotate(180deg)";
             sortingComments(dropDown);
         }
         else {
             dropDown.style.display = 'none';
-            //target.style.transform = "rotate(3600deg)";
         }
     }
 });
 
 function sortingComments(dropDown) {
-    const replyField = document.querySelector('.comment-field')
+    const imageMark = `<img src="./images/check-mark.svg" alt="Check-Mark" class="selected">`;
+    const nameSorting = document.querySelector('.filters');
 
     dropDown.addEventListener('click', function(event) {
         const target = event.target;
         const indexLi = target.getAttribute('data');
-        console.log(indexLi)
 
         if (indexLi == 0) {
-            replyField.style.flexDirection = 'column'
-            console.log('work')
+            insertingImage(target, indexLi);
+            nameSorting.innerHTML = 'По дате';
+            triangleProcessing(indexLi);
+        }
+        
+        if (indexLi == 1) {
+            insertingImage(target, indexLi);
+            nameSorting.innerHTML = 'По количеству оценок';
+            triangleProcessing(indexLi);
         } 
-    })
+
+        if (indexLi == 2) {
+            insertingImage(target, indexLi);
+            nameSorting.innerHTML = 'По актуальности';
+        } 
+
+        if (indexLi == 3) {
+            insertingImage(target, indexLi);
+            nameSorting.innerHTML = 'По количеству ответов';
+        } 
+
+        function insertingImage(target, indexLi) {
+            if (target.matches('.drop-down__list--p') || target.matches('.drop-down__list--li')) {
+                dropDown.querySelectorAll('.selected').forEach((mark) => {
+                  mark.remove();
+                });
+                
+                // Setting the image to the left of the sorting  
+                if(target.classList.value === 'drop-down__list--p') {
+                    target.parentElement.querySelector('[data="' + indexLi + '"]').insertAdjacentHTML('beforebegin', imageMark); 
+                }
+                else if (target.classList.value === 'drop-down__list--li') {
+                    target.querySelector('[data="' + indexLi + '"]').insertAdjacentHTML('beforebegin', imageMark);
+                }
+            }
+        } 
+    }) 
+}
+
+function triangleProcessing(indexLi) {
+    const commentField = document.querySelector('.comment-field');
+
+    document.querySelector('.triangle').addEventListener('click', function() {
+        const target = event.target;
+        transformTriangle = !transformTriangle;
+
+        if (transformTriangle) {
+            target.style.transform = "rotate(180deg)";
+
+            if (indexLi == 0) {
+                commentField.style.flexDirection = 'column';
+            } 
+
+            if (indexLi == 1) {
+                // Сортируем комментарии по рейтингу в возрастающем порядке
+                comments.sort((a, b) => a.rating - b.rating);
+                // Очищаем поле комментариев
+                commentField.innerHTML = "";
+                // Рендерим комментарии в возрастающем порядке рейтинга
+                comments.forEach((comment, index) => {
+                    commentField.innerHTML += (renderComment(comment, index));
+                });
+            }
+        }
+
+        else if (!transformTriangle) {
+            target.style.transform = "rotate(3600deg)";
+
+            if (indexLi == 0) {
+                commentField.style.flexDirection = 'column-reverse';
+            }
+
+            if (indexLi == 1) {
+                // Сортируем комментарии по рейтингу в убывающем порядке
+                comments.sort((a, b) => b.rating - a.rating);
+                // Очищаем поле комментариев
+                commentField.innerHTML = "";
+                // Рендерим комментарии в убывающем порядке рейтинга
+                comments.forEach((comment, index) => {
+                    commentField.innerHTML += (renderComment(comment, index));
+                });
+            }
+        }
+    });
+}
+
+function renderComment(comment, commentIndex) {
+    let out = '';
+     
+        out += `<div class="static-comment" data-index="${commentIndex}">
+            <div class="static-comment__flex">
+            <img src="./images/Max.png" alt="Max" class="avatar">
+            <div class="second-part-commit">
+                <div class="commit-info">
+                    <p class="commit-nickname">${comment.name}</p>
+                    <p class="time">${timeConverter(comment.time)}</p>
+                </div>
+                <p class="commit-text">${comment.body}</p>
+                <div class="commit-actions">
+                    <img src="./images/Send.svg" alt="send" class="send-svg">
+                    <p class="commit-reply">Ответить</p>
+                    <img src="./images/Empty-heart.svg" alt="heart" class="heart-svg">
+                    <p class="favorites">В избранном</p>
+                    <img src="./images/Minus.svg" alt="minus" data-parent="${commentIndex}" class="minus-svg">
+                    <span class="number-likes">${comment.rating}</span>
+                    <img src="./images/Plus.svg" alt="plus" data-parent="${commentIndex}" class="plus-svg">
+                </div>
+            </div>
+        </div>
+        <div class="text_btn writing-answers reply-input" style="display: none;">
+                    <div class="comment-body reply-comment-body" tabindex="0" contenteditable="true" role="textbox" aria-multiline="true">
+            
+                    </div>
+                    <div class="placeholder">
+                        <div class="ph_input">
+                            <div class="ph_content">Введите текст сообщения...</div>
+                        </div>
+                    </div>
+                    <button class="send__btn" disabled>Отправить</button>
+                    <button class="send__btn svg-cross__btn"><img src="./images/cross-svgrepo-com.svg" alt="cross" class="svg-cross"></button>
+                </div>
+                <div class="reply-field">${showAnswer(comment.answers, commentIndex)}</div>
+    </div>`;
+    
+  
+    return out;
 }
