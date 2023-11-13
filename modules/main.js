@@ -263,44 +263,44 @@ function sortingComments(dropDown) {
 
 function triangleProcessing(indexLi) {
     const commentField = document.querySelector('.comment-field');
+    const triangle = document.querySelector('.triangle');
+    console.log(indexLi)
 
-    document.querySelector('.triangle').addEventListener('click', function() {
+    triangle.addEventListener('click', function(event) {
         const target = event.target;
-        transformTriangle = !transformTriangle;
+        console.log(target)
 
-        if (transformTriangle) {
-            target.style.transform = "rotate(180deg)";
+        if (indexLi == 0) {
+            transformTriangle = !transformTriangle;
 
-            if (indexLi == 0) {
+            if (transformTriangle) {
                 commentField.style.flexDirection = 'column';
+                target.style.transform = "rotate(180deg)";
             } 
-
-            if (indexLi == 1) {
-                // Сортируем комментарии по рейтингу в возрастающем порядке
-                comments.sort((a, b) => a.rating - b.rating);
-                // Очищаем поле комментариев
-                commentField.innerHTML = "";
-                // Рендерим комментарии в возрастающем порядке рейтинга
-                comments.forEach((comment, index) => {
-                    commentField.innerHTML += (renderComment(comment, index));
-                });
-            }
+            else if (!transformTriangle) {
+                commentField.style.flexDirection = 'column-reverse';
+                target.style.transform = "rotate(360deg)";
+            } 
         }
 
-        else if (!transformTriangle) {
-            target.style.transform = "rotate(3600deg)";
+        if (indexLi == 1) {
+            // Сортируем комментарии по рейтингу в возрастающем порядке
+            transformTriangle = !transformTriangle;
+            const commentsRaiting = comments.slice();
 
-            if (indexLi == 0) {
-                commentField.style.flexDirection = 'column-reverse';
-            }
-
-            if (indexLi == 1) {
-                // Сортируем комментарии по рейтингу в убывающем порядке
-                comments.sort((a, b) => b.rating - a.rating);
-                // Очищаем поле комментариев
+            if (transformTriangle) {
+                commentsRaiting.sort((a, b) => a.rating - b.rating);
+                commentField.innerHTML = "";
+                // Рендерим комментарии в возрастающем порядке рейтинга
+                commentsRaiting.forEach((comment, index) => {
+                    commentField.innerHTML += (renderComment(comment, index));
+                });
+            } 
+            else if (!transformTriangle) {
+                commentsRaiting.sort((a, b) => b.rating - a.rating);
                 commentField.innerHTML = "";
                 // Рендерим комментарии в убывающем порядке рейтинга
-                comments.forEach((comment, index) => {
+                commentsRaiting.forEach((comment, index) => {
                     commentField.innerHTML += (renderComment(comment, index));
                 });
             }
@@ -345,7 +345,6 @@ function renderComment(comment, commentIndex) {
                 </div>
                 <div class="reply-field">${showAnswer(comment.answers, commentIndex)}</div>
     </div>`;
-    
   
     return out;
 }
