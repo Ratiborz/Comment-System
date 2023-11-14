@@ -1,5 +1,4 @@
-import {button, symbolsLimit, placeholder,} from './constants.js';
-
+import { button, symbolsLimit, placeholder } from './constants.js';
 
 export function handleInput(event) {
     let inputClass = event.target.classList.value;
@@ -75,7 +74,7 @@ export function handleInput(event) {
     }
 }
 
-export function banImage(event)  {
+export function banImage(event) {
     const clipboardData = event.clipboardData || window.clipboardData;
 
     if (clipboardData) {
@@ -86,11 +85,11 @@ export function banImage(event)  {
             alert('Вставка изображений запрещена.');
         }
     }
-};
+}
 
 export function banHtmlTag(event) {
     event.preventDefault();
     let text = event.clipboardData.getData('text/plain');
     let strippedText = text.replace(/(<([^>]+)>)/gi, '');
     document.execCommand('insertHTML', false, strippedText);
-};
+}

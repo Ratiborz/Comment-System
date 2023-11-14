@@ -1,4 +1,4 @@
-import {comments} from './main.js';
+import { comments } from './main.js';
 
 export function timeConverter(UNIX_timestamp) {
     let a = new Date(UNIX_timestamp * 1000);
@@ -13,20 +13,25 @@ export function timeConverter(UNIX_timestamp) {
     return time;
 }
 
-export function numbOfComments() { 
+export function numbOfComments() {
     let commentCount = 0;
     let replyCount = 0;
-    
+
     for (let i = 0; i < comments.length; i++) {
-      commentCount++;
-    
-      const replies = comments[i].answers;
-    
-      for (let j = 0; j < replies.length; j++) {
-        replyCount++;
-      }
+        commentCount++;
+
+        const replies = comments[i].answers;
+
+        for (let j = 0; j < replies.length; j++) {
+            replyCount++;
+        }
     }
     const countCommentsAndAnswers = document.querySelector('.number');
-    
+
     countCommentsAndAnswers.innerHTML = `(${commentCount + replyCount})`;
+}
+
+export function exitReply(replyInput, replyCommentBody) {
+    replyInput.style.display = 'none';
+    replyCommentBody.innerText = '';
 }

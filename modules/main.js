@@ -1,28 +1,23 @@
-import {commentName, commentBody, button, symbolsLimit, placeholder,} from './constants.js';
-import {handleInput, banImage, banHtmlTag} from './inputProcessing.js';
-import {timeConverter, numbOfComments} from './utils.js';
-import {ratingCount} from './rating.js';
-import {favoritesRegistration, pasteImageFavorites, drawFavorites} from './favouritesSystem.js';
+import { commentName, commentBody, button, symbolsLimit, placeholder } from './constants.js';
+import { handleInput, banImage, banHtmlTag } from './inputProcessing.js';
+import { timeConverter, numbOfComments, exitReply } from './utils.js';
+import { ratingCount } from './rating.js';
+import { favoritesRegistration, pasteImageFavorites, drawFavorites } from './favouritesSystem.js';
+import { sortingComments } from './sorting.js';
 
 export let comments = [];
-let transformTriangle = false;
-
-// TODO вынесли всё это
-let activeTriangle
-const triangle = document.querySelector('.triangle');
-const commentField = document.querySelector('.comment-field');
-
+export const commentField = document.querySelector('.comment-field');
 loadComments();
 
-document.querySelector('.send__btn').addEventListener('click',  function() {
+document.querySelector('.send__btn').addEventListener('click', function () {
     event.preventDefault();
     let comment = {
         name: commentName.textContent,
         body: commentBody.innerText,
         time: Math.floor(Date.now() / 1000),
         answers: [],
-        rating: 0, 
-        is_favorite: false, 
+        rating: 0,
+        is_favorite: false,
     };
     commentBody.innerText = '';
     comments.push(comment);
@@ -50,7 +45,7 @@ function loadComments() {
 
 function showComments() {
     let out = '';
-    comments.forEach(function (item, commentIndex ) {
+    comments.forEach(function (item, commentIndex) {
         out += `<div class="static-comment" data-index="${commentIndex}">
             <div class="static-comment__flex">
             <img src="./images/Max.png" alt="Max" class="static-comment__avatar">
@@ -86,7 +81,7 @@ function showComments() {
                 <div class="reply-field">${showAnswer(item.answers, commentIndex)}</div>
     </div>`;
     });
-    
+
     commentField.innerHTML = out;
     initAnswersEvent();
     numbOfComments();
@@ -97,35 +92,35 @@ commentBody.addEventListener('input', (event) => handleInput(event));
 commentBody.addEventListener('paste', (event) => banImage(event));
 commentBody.addEventListener('paste', (event) => banHtmlTag(event));
 
-function initAnswersEvent() {
+export function initAnswersEvent() {
     const replyButtons = document.querySelectorAll('.commit-reply');
-    
+
     replyButtons.forEach((button) => {
-         button.addEventListener('click', function () {
-             // Скрываем все другие поля ввода
-             const allReplyInputs = document.querySelectorAll('.reply-input');
-             allReplyInputs.forEach((replyInput) => {
-                 replyInput.style.display = 'none';
-             });
-             
-             // Находим ближайший родительский комментарий и его поле ввода
-             const comment = this.closest('.static-comment');
-             const replyInput = comment.querySelector('.reply-input');
-             const replyCommentBody = comment.querySelector('.reply-comment-body');
-             const currentButton = comment.querySelector('.send__btn');
-             const currentButtonExit = comment.querySelector('.svg-cross__btn');
-             const commentReplyName = comment.querySelector('.commit-nickname');
-             const commentReplyBody = replyCommentBody;
-             let commentIndex = comment.getAttribute('data-index');
-             
-             // Показываем поле ввода только для текущего комментария
-             replyInput.style.display = 'flex';
+        button.addEventListener('click', function () {
+            // Скрываем все другие поля ввода
+            const allReplyInputs = document.querySelectorAll('.reply-input');
+            allReplyInputs.forEach((replyInput) => {
+                replyInput.style.display = 'none';
+            });
 
-             replyCommentBody.addEventListener('paste', banImage);
-             replyCommentBody.addEventListener('paste', banHtmlTag);
-             replyCommentBody.addEventListener('input', handleInput);
+            // Находим ближайший родительский комментарий и его поле ввода
+            const comment = this.closest('.static-comment');
+            const replyInput = comment.querySelector('.reply-input');
+            const replyCommentBody = comment.querySelector('.reply-comment-body');
+            const currentButton = comment.querySelector('.send__btn');
+            const currentButtonExit = comment.querySelector('.svg-cross__btn');
+            const commentReplyName = comment.querySelector('.commit-nickname');
+            const commentReplyBody = replyCommentBody;
+            let commentIndex = comment.getAttribute('data-index');
 
-             currentButton.addEventListener('click', function() {
+            // Показываем поле ввода только для текущего комментария
+            replyInput.style.display = 'flex';
+
+            replyCommentBody.addEventListener('paste', banImage);
+            replyCommentBody.addEventListener('paste', banHtmlTag);
+            replyCommentBody.addEventListener('input', handleInput);
+
+            currentButton.addEventListener('click', function () {
                 event.preventDefault();
                 let answer = {
                     name: commentReplyName.textContent,
@@ -140,59 +135,53 @@ function initAnswersEvent() {
                 comments[commentIndex].answers.push(answer);
                 saveComments();
                 showComments();
-             });
+            });
 
-             currentButtonExit.addEventListener('click', function() {
+            currentButtonExit.addEventListener('click', function () {
                 exitReply(replyInput, replyCommentBody);
-             });
-             
-         });
-     });
+            });
+        });
+    });
 }
 
-function showAnswer(answers, commentParent) {
+export function showAnswer(answers, commentParent) {
     let out = '';
     answers.forEach(function (answer, indexAnswer) {
-            out += `<div class="static-comment__reply" data-index="${indexAnswer}">
+        out += `<div class="static-comment__reply" data-index="${indexAnswer}">
                 <img src="./images/Masturbek.png" alt="Masturbek" class="static-comment__avatar static-comment__avatar-answer">
                 <div class="second-part-commit">
                     <div class="commit-info commit-info__answer">
                         <p class="commit-nickname reply-name">Джунбокс3000</p>
-                        <img src="./images/Send.svg" alt="send">
+                        <img src="./images/Send.svg" alt="send" class="sendler-answer">
                         <p class="reply-nickname">${answer.name}</p>
-                        <p class="time">${timeConverter(answer.time)}</p>
+                        <p class="time time-answer">${timeConverter(answer.time)}</p>
                     </div>
                     <p class="commit-text">${answer.body}</p>
                     <div class="commit-actions">
                         <img src="./images/Empty-heart.svg" alt="heart" class="heart-svg">
                         <p class="favorites">В избранное</p>
-                        <img src="./images/Minus.svg" alt="minus" data-index="${indexAnswer}" data-parent="${commentParent}" class="minus-svg">
+                        <img src="./images/Minus.svg" alt="minus" data-index="${indexAnswer}" data-parent="${commentParent}" class="minus-svg minus-svg__answer">
                         <span class="number-likes">${answer.rating}</span>
-                        <img src="./images/Plus.svg" alt="plus" data-index="${indexAnswer}" data-parent="${commentParent}" class="plus-svg">
+                        <img src="./images/Plus.svg" alt="plus" data-index="${indexAnswer}" data-parent="${commentParent}" class="plus-svg plus-svg__answer">
                     </div>
                 </div>
             </div>`;
-        });
+    });
     return out;
 }
 
-function exitReply(replyInput, replyCommentBody) {
-    replyInput.style.display = 'none';
-    replyCommentBody.innerText = '';
-}
-
-document.addEventListener('click', function(event) {
+document.addEventListener('click', function (event) {
     const target = event.target;
-    
+
     // Проверяем, является ли кликнутый элемент кнопкой плюс
     if (target.matches('.plus-svg')) {
-      ratingCount(target, 'plus');
+        ratingCount(target, 'plus');
     }
-    
+
     // Проверяем, является ли кликнутый элемент кнопкой минус
     if (target.matches('.minus-svg')) {
-      ratingCount(target, 'minus');
-    } 
+        ratingCount(target, 'minus');
+    }
 
     // Добавление в избранное
     if (target.matches('.favorites')) {
@@ -204,219 +193,16 @@ document.addEventListener('click', function(event) {
         drawFavorites();
     }
 
+    // Выбор сортировки
     if (target.matches('.filters')) {
         const dropDown = document.querySelector('.drop-down');
         const displayInfo = window.getComputedStyle(dropDown).display;
 
         if (displayInfo === 'none') {
-            dropDown.style.display = 'block'
+            dropDown.style.display = 'block';
             sortingComments(dropDown);
-        }
-        else {
+        } else {
             dropDown.style.display = 'none';
         }
     }
 });
-
-function insertingImage(target, dropDown) {
-    const imageMark = `<img src="./images/check-mark.svg" alt="Check-Mark" class="selected">`;  
-    if (target.matches('.drop-down__list--p') || target.matches('.drop-down__list--li')) {
-        dropDown.querySelectorAll('.selected').forEach((mark) => {
-          mark.remove();
-        });
-
-        // Setting the image to the left of the sorting  
-        if(target.classList.value === 'drop-down__list--p') {
-            target.parentElement.querySelector('[data="' + activeTriangle + '"]').insertAdjacentHTML('beforebegin', imageMark); 
-        }
-        else if (target.classList.value === 'drop-down__list--li') {
-            target.querySelector('[data="' + activeTriangle + '"]').insertAdjacentHTML('beforebegin', imageMark);
-        }
-    }
-}
-
-function sortingComments(dropDown) {
-    const nameSorting = document.querySelector('.filters');
-
-    dropDown.addEventListener('click', function(event) {
-        const target = event.target;
-        activeTriangle = target.getAttribute('data');
-        if (activeTriangle == 0) {
-            insertingImage(target, dropDown);
-            nameSorting.innerHTML = 'По дате';
-        }
-        
-        if (activeTriangle == 1) {
-            insertingImage(target, dropDown);
-            nameSorting.innerHTML = 'По количеству оценок';
-        } 
-
-        if (activeTriangle == 2) {
-            insertingImage(target, dropDown);
-            nameSorting.innerHTML = 'По актуальности';
-        } 
-
-        if (activeTriangle == 3) {
-            insertingImage(target, dropDown);
-            nameSorting.innerHTML = 'По количеству ответов';
-        }
-    }) 
-}
-
-// TODO кликаем всегда по треугольнику и activeTriangle у нас всегда известен
-triangle.addEventListener('click', function(event) {
-    const target = event.target;
-
-    if (activeTriangle == 0) {
-        transformTriangle = !transformTriangle;
-        const commentsRaiting = comments.slice();
-
-        if (transformTriangle) {
-            target.style.transform = "rotate(180deg)";
-            commentsRaiting.sort((a, b) => a.time - b.time);
-            commentField.innerHTML = "";
-
-            // Рендеринг комментариев в порядке возрастания даты размещения
-            commentsRaiting.forEach((comment, index) => {
-                commentField.innerHTML += (renderComment(comment, index));
-            });
-            initAnswersEvent();
-        } 
-        else {
-            target.style.transform = "rotate(360deg)";
-            commentsRaiting.sort((a, b) => b.time - a.time);
-            commentField.innerHTML = "";
-
-            // Рендеринг комментариев в порядке убывания даты размещения
-            commentsRaiting.forEach((comment, index) => {
-                commentField.innerHTML += (renderComment(comment, index));
-            });
-            initAnswersEvent();
-        } 
-    }
-
-    if (activeTriangle == 1) {
-        // Сортируем комментарии по рейтингу в возрастающем порядке
-        transformTriangle = !transformTriangle;
-        const commentsRaiting = comments.slice();
-
-        if (transformTriangle) {
-            target.style.transform = "rotate(180deg)";
-            commentsRaiting.sort((a, b) => a.rating - b.rating);
-            commentField.innerHTML = "";
-
-            // Рендерим комментарии в возрастающем порядке рейтинга
-            commentsRaiting.forEach((comment, index) => {
-                commentField.innerHTML += (renderComment(comment, index));
-            });
-            initAnswersEvent();
-        } 
-        else {
-            target.style.transform = "rotate(360deg)";
-            commentsRaiting.sort((a, b) => b.rating - a.rating);
-            commentField.innerHTML = "";
-
-            // Рендерим комментарии в убывающем порядке рейтинга
-            commentsRaiting.forEach((comment, index) => {
-                commentField.innerHTML += (renderComment(comment, index));
-            });
-            initAnswersEvent();
-        }
-    }
-
-    if (activeTriangle == 2) {
-        transformTriangle = !transformTriangle;
-        const commentsRaiting = comments.slice();
-
-        if (transformTriangle) {
-            target.style.transform = "rotate(180deg)";
-            commentsRaiting.sort((a, b) => a.time - b.time);
-            commentField.innerHTML = "";
-
-            // Рендеринг комментариев в порядке возрастания даты размещения
-            commentsRaiting.forEach((comment, index) => {
-                commentField.innerHTML += (renderComment(comment, index));
-            });
-            initAnswersEvent();
-        } 
-        else {
-            target.style.transform = "rotate(360deg)";
-            commentsRaiting.sort((a, b) => b.time - a.time);
-            commentField.innerHTML = "";
-
-            // Рендеринг комментариев в порядке убывания даты размещения
-            commentsRaiting.forEach((comment, index) => {
-                commentField.innerHTML += (renderComment(comment, index));
-            });
-            initAnswersEvent();
-        } 
-    }
-
-    if (activeTriangle == 3) {
-        transformTriangle = !transformTriangle;
-        const commentsRaiting = comments.slice();
-
-        if (transformTriangle) {
-            target.style.transform = "rotate(180deg)";
-            commentsRaiting.sort((a, b) => a.answers.length - b.answers.length);
-            commentField.innerHTML = "";
-
-            commentsRaiting.forEach((comment, index) => {
-                commentField.innerHTML += (renderComment(comment, index));
-            });
-            initAnswersEvent();
-        }
-        else {
-            target.style.transform = "rotate(360deg)";
-            commentsRaiting.sort((a, b) => b.answers.length - a.answers.length);
-            commentField.innerHTML = "";
-
-            commentsRaiting.forEach((comment, index) => {
-                commentField.innerHTML += (renderComment(comment, index));
-            });
-            initAnswersEvent();
-        }
-        
-    }
-});
-
-function renderComment(comment, commentIndex) {
-    let out = '';
-     
-        out += `<div class="static-comment" data-index="${commentIndex}">
-            <div class="static-comment__flex">
-            <img src="./images/Max.png" alt="Max" class="static-comment__avatar">
-            <div class="second-part-commit">
-                <div class="commit-info">
-                    <p class="commit-nickname">${comment.name}</p>
-                    <p class="time">${timeConverter(comment.time)}</p>
-                </div>
-                <p class="commit-text">${comment.body}</p>
-                <div class="commit-actions">
-                    <img src="./images/Send.svg" alt="send" class="send-svg">
-                    <p class="commit-reply">Ответить</p>
-                    <img src="./images/Empty-heart.svg" alt="heart" class="heart-svg">
-                    <p class="favorites">В избранное</p>
-                    <img src="./images/Minus.svg" alt="minus" data-parent="${commentIndex}" class="minus-svg">
-                    <span class="number-likes">${comment.rating}</span>
-                    <img src="./images/Plus.svg" alt="plus" data-parent="${commentIndex}" class="plus-svg">
-                </div>
-            </div>
-        </div>
-        <div class="text_btn writing-answers reply-input" style="display: none;">
-                    <div class="comment-body reply-comment-body" tabindex="0" contenteditable="true" role="textbox" aria-multiline="true">
-            
-                    </div>
-                    <div class="placeholder">
-                        <div class="ph_input">
-                            <div class="ph_content">Введите текст сообщения...</div>
-                        </div>
-                    </div>
-                    <button class="send__btn" disabled>Отправить</button>
-                    <button class="send__btn svg-cross__btn"><img src="./images/cross-svgrepo-com.svg" alt="cross" class="svg-cross"></button>
-                </div>
-                <div class="reply-field">${showAnswer(comment.answers, commentIndex)}</div>
-    </div>`;
-  
-    return out;
-}

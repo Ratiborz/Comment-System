@@ -7,9 +7,10 @@ main {
     margin: 0 auto;
 }
 
-ul, li {
+ul,
+li {
     list-style: none;
-    margin: 0; 
+    margin: 0;
     padding: 0;
 }
 
@@ -200,7 +201,7 @@ ul, li {
     padding: 20px 59px 20px 59px;
     border: none;
     border-radius: 5px;
-    background-color: #A1A1A1;
+    background-color: #a1a1a1;
     color: #000;
     font-family: Inter;
     font-size: 18px;
@@ -378,7 +379,7 @@ ul, li {
 }
 
 .active {
-    color: #F00;
+    color: #f00;
     opacity: 1;
     margin-left: 82px;
 }
@@ -418,8 +419,8 @@ ul, li {
 
 .drop-down__list {
     border-radius: 5px;
-    background: #FFF;
-    box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.10);
+    background: #fff;
+    box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.1);
     padding: 8px 16px 9px 30px;
 }
 
@@ -433,7 +434,6 @@ ul, li {
     line-height: normal;
     padding-bottom: 5px;
     cursor: pointer;
-
 }
 
 .drop-down__list--p {
@@ -456,14 +456,12 @@ ul, li {
 }
 
 @media (max-width: 1230px) {
-    
     aside {
         display: none;
     }
 }
 
 @media (max-width: 320px) {
-
     .container__header {
         width: 320px;
         height: 68px;
@@ -579,7 +577,7 @@ ul, li {
 
     .commit-info {
         margin-left: 90px;
-        margin-bottom: 15px;
+        margin-bottom: 30px;
     }
 
     .commit-reply {
@@ -605,13 +603,13 @@ ul, li {
 
     .minus-svg {
         position: absolute;
-        left: 270px;
-        top: 24px
+        left: 267px;
+        top: 24px;
     }
 
     .plus-svg {
         position: absolute;
-        left: 270px;
+        left: 267px;
         top: -24px;
     }
 
@@ -626,6 +624,7 @@ ul, li {
 
     .commit-info__answer {
         margin-left: 0px;
+        position: relative;
     }
 
     .static-comment__reply {
@@ -638,7 +637,27 @@ ul, li {
 
     .reply-nickname {
         margin-right: 0px;
+        position: absolute;
+        left: 125px;
+        top: 24px;
+    }
+
+    .sendler-answer {
+        position: absolute;
+        top: 24px;
+        left: 110px;
+    }
+
+    .plus-svg__answer,
+    .minus-svg__answer {
+        left: 140px;
+    }
+
+    .time-answer {
+        margin-left: 119px;
+    }
+
+    .reply-field {
+        margin-top: 40px;
     }
 }
-
-
