@@ -4,6 +4,7 @@ p {
 
 main {
     max-width: 1025px;
+    margin: 0 auto;
 }
 
 ul, li {
@@ -64,7 +65,7 @@ ul, li {
 }
 
 .block {
-    width: 1022px;
+    max-width: 1022px;
     height: 168px;
     background-color: #d9d9d9;
     margin-bottom: 40px;
@@ -453,3 +454,191 @@ ul, li {
     left: -19px;
     color: lightgray;
 }
+
+@media (max-width: 1230px) {
+    
+    aside {
+        display: none;
+    }
+}
+
+@media (max-width: 320px) {
+
+    .container__header {
+        width: 320px;
+        height: 68px;
+    }
+
+    main {
+        max-width: 300px;
+    }
+
+    .list02 {
+        display: none;
+    }
+    .list {
+        margin-right: 0px;
+    }
+
+    .list_blocks {
+        margin: 0 auto;
+        align-items: center;
+    }
+
+    .list__block {
+        width: 300px;
+    }
+
+    .block {
+        width: 300px;
+        height: 132px;
+    }
+
+    .line {
+        max-width: 300px;
+    }
+
+    .filter {
+        flex-wrap: wrap;
+    }
+
+    .filters {
+        font-size: 14px;
+    }
+
+    .favourites {
+        font-size: 14px;
+        margin-right: 10px;
+    }
+
+    .triangle {
+        margin-right: 8px;
+    }
+
+    .heart {
+        width: 19px;
+        height: 18px;
+    }
+
+    .comments {
+        margin-bottom: 19px;
+    }
+
+    .writing-comments {
+        max-width: 300px;
+        position: relative;
+    }
+
+    .avatar-position {
+        position: absolute;
+        left: 10px;
+        top: -15px;
+    }
+
+    .comment-body {
+        max-width: 300px;
+        margin-bottom: 15px;
+    }
+
+    .comment-name {
+        margin-left: 100px;
+        margin-right: 0px;
+        margin-bottom: 6px;
+    }
+
+    .writing-comments__info {
+        flex-direction: column;
+    }
+
+    .writing-comments__info--prohibition {
+        margin-left: 210px;
+    }
+
+    .text_btn {
+        flex-direction: column;
+    }
+
+    .send__btn {
+        margin-left: 0px;
+        font-size: 16px;
+    }
+
+    .static-comment__flex {
+        position: relative;
+    }
+
+    .static-comment__avatar {
+        position: absolute;
+        top: -15px;
+    }
+
+    .commit-nickname {
+        width: 30px;
+        margin-right: 106px;
+    }
+
+    .commit-info {
+        margin-left: 90px;
+        margin-bottom: 15px;
+    }
+
+    .commit-reply {
+        margin-right: 14px;
+    }
+
+    .send-svg {
+        margin-right: 7px;
+    }
+
+    .heart-svg {
+        margin-right: 3px;
+    }
+
+    .favorites {
+        margin-right: 20px;
+        font-size: 16px;
+    }
+
+    .commit-actions {
+        position: relative;
+    }
+
+    .minus-svg {
+        position: absolute;
+        left: 270px;
+        top: 24px
+    }
+
+    .plus-svg {
+        position: absolute;
+        left: 270px;
+        top: -24px;
+    }
+
+    .static-comment__reply {
+        margin-left: 0px;
+    }
+
+    .reply-name {
+        margin-right: 0px;
+        margin-left: 80px;
+    }
+
+    .commit-info__answer {
+        margin-left: 0px;
+    }
+
+    .static-comment__reply {
+        position: relative;
+    }
+
+    .static-comment__avatar-answer {
+        position: absolute;
+    }
+
+    .reply-nickname {
+        margin-right: 0px;
+    }
+}
+
+

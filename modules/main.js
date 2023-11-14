@@ -6,6 +6,12 @@ import {favoritesRegistration, pasteImageFavorites, drawFavorites} from './favou
 
 export let comments = [];
 let transformTriangle = false;
+
+// TODO вынесли всё это
+let activeTriangle
+const triangle = document.querySelector('.triangle');
+const commentField = document.querySelector('.comment-field');
+
 loadComments();
 
 document.querySelector('.send__btn').addEventListener('click',  function() {
@@ -22,7 +28,7 @@ document.querySelector('.send__btn').addEventListener('click',  function() {
     comments.push(comment);
 
     saveComments();
-    showComments(comments);
+    showComments();
     button.style.backgroundColor = '';
     symbolsLimit.innerHTML = `Макс. 1000 символов`;
     symbolsLimit.classList.remove('active');
@@ -38,17 +44,16 @@ export function saveComments() {
 
 function loadComments() {
     if (localStorage.getItem('comments')) comments = JSON.parse(localStorage.getItem('comments'));
-    showComments(comments);
+    showComments();
     pasteImageFavorites();
 }
 
-function showComments(array) {
-    let commentField = document.getElementById('comment-field');
+function showComments() {
     let out = '';
-    array.forEach(function (item, commentIndex ) {
+    comments.forEach(function (item, commentIndex ) {
         out += `<div class="static-comment" data-index="${commentIndex}">
             <div class="static-comment__flex">
-            <img src="./images/Max.png" alt="Max" class="avatar">
+            <img src="./images/Max.png" alt="Max" class="static-comment__avatar">
             <div class="second-part-commit">
                 <div class="commit-info">
                     <p class="commit-nickname">${item.name}</p>
@@ -59,7 +64,7 @@ function showComments(array) {
                     <img src="./images/Send.svg" alt="send" class="send-svg">
                     <p class="commit-reply">Ответить</p>
                     <img src="./images/Empty-heart.svg" alt="heart" class="heart-svg">
-                    <p class="favorites">В избранном</p>
+                    <p class="favorites">В избранное</p>
                     <img src="./images/Minus.svg" alt="minus" data-parent="${commentIndex}" class="minus-svg">
                     <span class="number-likes">${item.rating}</span>
                     <img src="./images/Plus.svg" alt="plus" data-parent="${commentIndex}" class="plus-svg">
@@ -149,9 +154,9 @@ function showAnswer(answers, commentParent) {
     let out = '';
     answers.forEach(function (answer, indexAnswer) {
             out += `<div class="static-comment__reply" data-index="${indexAnswer}">
-                <img src="./images/Masturbek.png" alt="Masturbek" class="static-comment__avatar">
+                <img src="./images/Masturbek.png" alt="Masturbek" class="static-comment__avatar static-comment__avatar-answer">
                 <div class="second-part-commit">
-                    <div class="commit-info">
+                    <div class="commit-info commit-info__answer">
                         <p class="commit-nickname reply-name">Джунбокс3000</p>
                         <img src="./images/Send.svg" alt="send">
                         <p class="reply-nickname">${answer.name}</p>
@@ -160,7 +165,7 @@ function showAnswer(answers, commentParent) {
                     <p class="commit-text">${answer.body}</p>
                     <div class="commit-actions">
                         <img src="./images/Empty-heart.svg" alt="heart" class="heart-svg">
-                        <p class="favorites">В избранном</p>
+                        <p class="favorites">В избранное</p>
                         <img src="./images/Minus.svg" alt="minus" data-index="${indexAnswer}" data-parent="${commentParent}" class="minus-svg">
                         <span class="number-likes">${answer.rating}</span>
                         <img src="./images/Plus.svg" alt="plus" data-index="${indexAnswer}" data-parent="${commentParent}" class="plus-svg">
@@ -213,107 +218,174 @@ document.addEventListener('click', function(event) {
     }
 });
 
+function insertingImage(target, dropDown) {
+    const imageMark = `<img src="./images/check-mark.svg" alt="Check-Mark" class="selected">`;  
+    if (target.matches('.drop-down__list--p') || target.matches('.drop-down__list--li')) {
+        dropDown.querySelectorAll('.selected').forEach((mark) => {
+          mark.remove();
+        });
+
+        // Setting the image to the left of the sorting  
+        if(target.classList.value === 'drop-down__list--p') {
+            target.parentElement.querySelector('[data="' + activeTriangle + '"]').insertAdjacentHTML('beforebegin', imageMark); 
+        }
+        else if (target.classList.value === 'drop-down__list--li') {
+            target.querySelector('[data="' + activeTriangle + '"]').insertAdjacentHTML('beforebegin', imageMark);
+        }
+    }
+}
+
 function sortingComments(dropDown) {
-    const imageMark = `<img src="./images/check-mark.svg" alt="Check-Mark" class="selected">`;
     const nameSorting = document.querySelector('.filters');
 
     dropDown.addEventListener('click', function(event) {
         const target = event.target;
-        const indexLi = target.getAttribute('data');
-
-        if (indexLi == 0) {
-            insertingImage(target, indexLi);
+        activeTriangle = target.getAttribute('data');
+        if (activeTriangle == 0) {
+            insertingImage(target, dropDown);
             nameSorting.innerHTML = 'По дате';
-            triangleProcessing(indexLi);
         }
         
-        if (indexLi == 1) {
-            insertingImage(target, indexLi);
+        if (activeTriangle == 1) {
+            insertingImage(target, dropDown);
             nameSorting.innerHTML = 'По количеству оценок';
-            triangleProcessing(indexLi);
         } 
 
-        if (indexLi == 2) {
-            insertingImage(target, indexLi);
+        if (activeTriangle == 2) {
+            insertingImage(target, dropDown);
             nameSorting.innerHTML = 'По актуальности';
         } 
 
-        if (indexLi == 3) {
-            insertingImage(target, indexLi);
+        if (activeTriangle == 3) {
+            insertingImage(target, dropDown);
             nameSorting.innerHTML = 'По количеству ответов';
-        } 
-
-        function insertingImage(target, indexLi) {
-            if (target.matches('.drop-down__list--p') || target.matches('.drop-down__list--li')) {
-                dropDown.querySelectorAll('.selected').forEach((mark) => {
-                  mark.remove();
-                });
-                
-                // Setting the image to the left of the sorting  
-                if(target.classList.value === 'drop-down__list--p') {
-                    target.parentElement.querySelector('[data="' + indexLi + '"]').insertAdjacentHTML('beforebegin', imageMark); 
-                }
-                else if (target.classList.value === 'drop-down__list--li') {
-                    target.querySelector('[data="' + indexLi + '"]').insertAdjacentHTML('beforebegin', imageMark);
-                }
-            }
-        } 
+        }
     }) 
 }
 
-function triangleProcessing(indexLi) {
-    const commentField = document.querySelector('.comment-field');
-    const triangle = document.querySelector('.triangle');
-    console.log(indexLi)
+// TODO кликаем всегда по треугольнику и activeTriangle у нас всегда известен
+triangle.addEventListener('click', function(event) {
+    const target = event.target;
 
-    triangle.addEventListener('click', function(event) {
-        const target = event.target;
-        console.log(target)
+    if (activeTriangle == 0) {
+        transformTriangle = !transformTriangle;
+        const commentsRaiting = comments.slice();
 
-        if (indexLi == 0) {
-            transformTriangle = !transformTriangle;
+        if (transformTriangle) {
+            target.style.transform = "rotate(180deg)";
+            commentsRaiting.sort((a, b) => a.time - b.time);
+            commentField.innerHTML = "";
 
-            if (transformTriangle) {
-                commentField.style.flexDirection = 'column';
-                target.style.transform = "rotate(180deg)";
-            } 
-            else if (!transformTriangle) {
-                commentField.style.flexDirection = 'column-reverse';
-                target.style.transform = "rotate(360deg)";
-            } 
+            // Рендеринг комментариев в порядке возрастания даты размещения
+            commentsRaiting.forEach((comment, index) => {
+                commentField.innerHTML += (renderComment(comment, index));
+            });
+            initAnswersEvent();
+        } 
+        else {
+            target.style.transform = "rotate(360deg)";
+            commentsRaiting.sort((a, b) => b.time - a.time);
+            commentField.innerHTML = "";
+
+            // Рендеринг комментариев в порядке убывания даты размещения
+            commentsRaiting.forEach((comment, index) => {
+                commentField.innerHTML += (renderComment(comment, index));
+            });
+            initAnswersEvent();
+        } 
+    }
+
+    if (activeTriangle == 1) {
+        // Сортируем комментарии по рейтингу в возрастающем порядке
+        transformTriangle = !transformTriangle;
+        const commentsRaiting = comments.slice();
+
+        if (transformTriangle) {
+            target.style.transform = "rotate(180deg)";
+            commentsRaiting.sort((a, b) => a.rating - b.rating);
+            commentField.innerHTML = "";
+
+            // Рендерим комментарии в возрастающем порядке рейтинга
+            commentsRaiting.forEach((comment, index) => {
+                commentField.innerHTML += (renderComment(comment, index));
+            });
+            initAnswersEvent();
+        } 
+        else {
+            target.style.transform = "rotate(360deg)";
+            commentsRaiting.sort((a, b) => b.rating - a.rating);
+            commentField.innerHTML = "";
+
+            // Рендерим комментарии в убывающем порядке рейтинга
+            commentsRaiting.forEach((comment, index) => {
+                commentField.innerHTML += (renderComment(comment, index));
+            });
+            initAnswersEvent();
         }
+    }
 
-        if (indexLi == 1) {
-            // Сортируем комментарии по рейтингу в возрастающем порядке
-            transformTriangle = !transformTriangle;
-            const commentsRaiting = comments.slice();
+    if (activeTriangle == 2) {
+        transformTriangle = !transformTriangle;
+        const commentsRaiting = comments.slice();
 
-            if (transformTriangle) {
-                commentsRaiting.sort((a, b) => a.rating - b.rating);
-                commentField.innerHTML = "";
-                // Рендерим комментарии в возрастающем порядке рейтинга
-                commentsRaiting.forEach((comment, index) => {
-                    commentField.innerHTML += (renderComment(comment, index));
-                });
-            } 
-            else if (!transformTriangle) {
-                commentsRaiting.sort((a, b) => b.rating - a.rating);
-                commentField.innerHTML = "";
-                // Рендерим комментарии в убывающем порядке рейтинга
-                commentsRaiting.forEach((comment, index) => {
-                    commentField.innerHTML += (renderComment(comment, index));
-                });
-            }
+        if (transformTriangle) {
+            target.style.transform = "rotate(180deg)";
+            commentsRaiting.sort((a, b) => a.time - b.time);
+            commentField.innerHTML = "";
+
+            // Рендеринг комментариев в порядке возрастания даты размещения
+            commentsRaiting.forEach((comment, index) => {
+                commentField.innerHTML += (renderComment(comment, index));
+            });
+            initAnswersEvent();
+        } 
+        else {
+            target.style.transform = "rotate(360deg)";
+            commentsRaiting.sort((a, b) => b.time - a.time);
+            commentField.innerHTML = "";
+
+            // Рендеринг комментариев в порядке убывания даты размещения
+            commentsRaiting.forEach((comment, index) => {
+                commentField.innerHTML += (renderComment(comment, index));
+            });
+            initAnswersEvent();
+        } 
+    }
+
+    if (activeTriangle == 3) {
+        transformTriangle = !transformTriangle;
+        const commentsRaiting = comments.slice();
+
+        if (transformTriangle) {
+            target.style.transform = "rotate(180deg)";
+            commentsRaiting.sort((a, b) => a.answers.length - b.answers.length);
+            commentField.innerHTML = "";
+
+            commentsRaiting.forEach((comment, index) => {
+                commentField.innerHTML += (renderComment(comment, index));
+            });
+            initAnswersEvent();
         }
-    });
-}
+        else {
+            target.style.transform = "rotate(360deg)";
+            commentsRaiting.sort((a, b) => b.answers.length - a.answers.length);
+            commentField.innerHTML = "";
+
+            commentsRaiting.forEach((comment, index) => {
+                commentField.innerHTML += (renderComment(comment, index));
+            });
+            initAnswersEvent();
+        }
+        
+    }
+});
 
 function renderComment(comment, commentIndex) {
     let out = '';
      
         out += `<div class="static-comment" data-index="${commentIndex}">
             <div class="static-comment__flex">
-            <img src="./images/Max.png" alt="Max" class="avatar">
+            <img src="./images/Max.png" alt="Max" class="static-comment__avatar">
             <div class="second-part-commit">
                 <div class="commit-info">
                     <p class="commit-nickname">${comment.name}</p>
@@ -324,7 +396,7 @@ function renderComment(comment, commentIndex) {
                     <img src="./images/Send.svg" alt="send" class="send-svg">
                     <p class="commit-reply">Ответить</p>
                     <img src="./images/Empty-heart.svg" alt="heart" class="heart-svg">
-                    <p class="favorites">В избранном</p>
+                    <p class="favorites">В избранное</p>
                     <img src="./images/Minus.svg" alt="minus" data-parent="${commentIndex}" class="minus-svg">
                     <span class="number-likes">${comment.rating}</span>
                     <img src="./images/Plus.svg" alt="plus" data-parent="${commentIndex}" class="plus-svg">
