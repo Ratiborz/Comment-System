@@ -35,8 +35,8 @@ export function favoritesRegistration(target) {
 
 export function pasteImageFavorites() {
     const savedComments = JSON.parse(localStorage.getItem('comments'));
-    const firstImage = '/images/Only-heart.svg';
-    const secondImage = '/images/Empty-heart.svg';
+    const firstImage = './images/Only-heart.svg';
+    const secondImage = './images/Empty-heart.svg';
 
     if (savedComments) {
         savedComments.forEach(function (comment, index) {
