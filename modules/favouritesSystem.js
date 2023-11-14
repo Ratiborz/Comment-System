@@ -10,8 +10,8 @@ export function favoritesRegistration(target) {
     const indexAnswer = favoritesAnswer.getAttribute('data-index');
 
     const imageFavorites = target.parentNode.querySelector('.heart-svg');
-    const firstImage = '/images/Only-heart.svg';
-    const secondImage = '/images/Empty-heart.svg';
+    const firstImage = './images/Only-heart.svg';
+    const secondImage = './images/Empty-heart.svg';
 
     if (favoritesComment.classList.value === 'static-comment') {
         if (comments[indexComment].is_favorite === false) {
