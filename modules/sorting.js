@@ -13,12 +13,17 @@ function insertingImage(target, dropDown) {
         dropDown.querySelectorAll('.selected').forEach((mark) => {
             mark.remove();
         });
-        if (target.classList.value === 'drop-down__list--p' && target != null) {
-            target.parentElement.querySelector(`[data="${activeTriangle}"]`)
-                .insertAdjacentHTML('beforebegin', imageMark.outerHTML);
+        if (target.classList.value === 'drop-down__list--p') {
+            const element = target.parentElement.querySelector(`[data="${activeTriangle}"]`);
+            if (element) {
+                element.insertAdjacentHTML('beforebegin', imageMark.outerHTML);
+            }
         }
-        else if (target.classList.value === 'drop-down__list--li' && target != null) {
-            target.querySelector(`[data="${activeTriangle}"]`).insertAdjacentHTML('beforebegin', imageMark.outerHTML);
+        else if (target.classList.value === 'drop-down__list--li') {
+            const element = target.querySelector(`[data="${activeTriangle}"]`);
+            if (element) {
+                element.insertAdjacentHTML('beforebegin', imageMark.outerHTML);
+            }
         }
     }
 }
@@ -51,64 +56,62 @@ triangle.addEventListener('click', function (event) {
         transformTriangle = !transformTriangle;
         const commentsRaiting = comments.slice();
         if (transformTriangle) {
-            target.style.transform = 'rotate(180deg)';
+            target.style.transform = 'rotate(360deg)';
             commentsRaiting.sort((a, b) => a.time - b.time);
             commentField.innerHTML = '';
-            commentsRaiting.forEach((comment, index) => {
-                commentField.innerHTML += renderComment(comment, index); // Не видно определения renderComment
-            });
-            initAnswersEvent(); // Не видно определения initAnswersEvent
-        }
-        else {
-            target.style.transform = 'rotate(360deg)';
-            commentsRaiting.sort((a, b) => b.time - a.time);
-            commentField.innerHTML = '';
-            commentsRaiting.forEach((comment, index) => {
-                commentField.innerHTML += renderComment(comment, index); // Не видно определения renderComment
-            });
-            initAnswersEvent(); // Не видно определения initAnswersEvent
-        }
-    }
-    if (activeTriangle === 1) {
-        transformTriangle = !transformTriangle;
-        const commentsRaiting = comments.slice();
-        if (transformTriangle) {
-            target.style.transform = 'rotate(180deg)';
-            commentsRaiting.sort((a, b) => a.rating - b.rating);
-            commentField.innerHTML = '';
-            commentsRaiting.forEach((comment, index) => {
-                commentField.innerHTML += renderComment(comment, index); // Не видно определения renderComment
-            });
-            initAnswersEvent(); // Не видно определения initAnswersEvent
-        }
-        else {
-            target.style.transform = 'rotate(360deg)';
-            commentsRaiting.sort((a, b) => b.rating - a.rating);
-            commentField.innerHTML = '';
-            commentsRaiting.forEach((comment, index) => {
-                commentField.innerHTML += renderComment(comment, index); // Не видно определения renderComment
-            });
-            initAnswersEvent(); // Не видно определения initAnswersEvent
-        }
-    }
-    if (activeTriangle == 2) {
-        transformTriangle = !transformTriangle;
-        const commentsRaiting = comments.slice();
-        if (transformTriangle) {
-            target.style.transform = 'rotate(180deg)';
-            commentsRaiting.sort((a, b) => a.time - b.time);
-            commentField.innerHTML = '';
-            // Рендеринг комментариев в порядке возрастания даты размещения
             commentsRaiting.forEach((comment, index) => {
                 commentField.innerHTML += renderComment(comment, index);
             });
             initAnswersEvent();
         }
         else {
-            target.style.transform = 'rotate(360deg)';
+            target.style.transform = 'rotate(180deg)';
             commentsRaiting.sort((a, b) => b.time - a.time);
             commentField.innerHTML = '';
-            // Рендеринг комментариев в порядке убывания даты размещения
+            commentsRaiting.forEach((comment, index) => {
+                commentField.innerHTML += renderComment(comment, index);
+            });
+            initAnswersEvent();
+        }
+    }
+    if (activeTriangle === 1) {
+        transformTriangle = !transformTriangle;
+        const commentsRaiting = comments.slice();
+        if (transformTriangle) {
+            target.style.transform = 'rotate(360deg)';
+            commentsRaiting.sort((a, b) => a.rating - b.rating);
+            commentField.innerHTML = '';
+            commentsRaiting.forEach((comment, index) => {
+                commentField.innerHTML += renderComment(comment, index);
+            });
+            initAnswersEvent();
+        }
+        else {
+            target.style.transform = 'rotate(180deg)';
+            commentsRaiting.sort((a, b) => b.rating - a.rating);
+            commentField.innerHTML = '';
+            commentsRaiting.forEach((comment, index) => {
+                commentField.innerHTML += renderComment(comment, index);
+            });
+            initAnswersEvent();
+        }
+    }
+    if (activeTriangle == 2) {
+        transformTriangle = !transformTriangle;
+        const commentsRaiting = comments.slice();
+        if (transformTriangle) {
+            target.style.transform = 'rotate(360deg)';
+            commentsRaiting.sort((a, b) => a.time - b.time);
+            commentField.innerHTML = '';
+            commentsRaiting.forEach((comment, index) => {
+                commentField.innerHTML += renderComment(comment, index);
+            });
+            initAnswersEvent();
+        }
+        else {
+            target.style.transform = 'rotate(180deg)';
+            commentsRaiting.sort((a, b) => b.time - a.time);
+            commentField.innerHTML = '';
             commentsRaiting.forEach((comment, index) => {
                 commentField.innerHTML += renderComment(comment, index);
             });
@@ -119,7 +122,7 @@ triangle.addEventListener('click', function (event) {
         transformTriangle = !transformTriangle;
         const commentsRaiting = comments.slice();
         if (transformTriangle) {
-            target.style.transform = 'rotate(180deg)';
+            target.style.transform = 'rotate(360deg)';
             commentsRaiting.sort((a, b) => a.answers.length - b.answers.length);
             commentField.innerHTML = '';
             commentsRaiting.forEach((comment, index) => {
@@ -128,7 +131,7 @@ triangle.addEventListener('click', function (event) {
             initAnswersEvent();
         }
         else {
-            target.style.transform = 'rotate(360deg)';
+            target.style.transform = 'rotate(180deg)';
             commentsRaiting.sort((a, b) => b.answers.length - a.answers.length);
             commentField.innerHTML = '';
             commentsRaiting.forEach((comment, index) => {

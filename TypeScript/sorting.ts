@@ -9,7 +9,6 @@ const commentField: HTMLElement = document.querySelector('.comment-field')!;
 let activeTriangle: number;
 let transformTriangle: boolean = false;
 
-// Типизация для элемента dropDown
 type DropDownElement = HTMLElement & {
     classList: {
         value: string;
@@ -97,23 +96,23 @@ triangle.addEventListener('click', function (event: Event) {
         const commentsRaiting = comments.slice();
 
         if (transformTriangle) {
-            target.style.transform = 'rotate(180deg)';
+            target.style.transform = 'rotate(360deg)';
             commentsRaiting.sort((a: Comment, b: Comment) => a.time - b.time);
             commentField.innerHTML = '';
 
             commentsRaiting.forEach((comment: Comment, index: number) => {
-                commentField.innerHTML += renderComment(comment, index); // Не видно определения renderComment
+                commentField.innerHTML += renderComment(comment, index); 
             });
-            initAnswersEvent(); // Не видно определения initAnswersEvent
+            initAnswersEvent(); 
         } else {
-            target.style.transform = 'rotate(360deg)';
+            target.style.transform = 'rotate(180deg)';
             commentsRaiting.sort((a: Comment, b: Comment) => b.time - a.time);
             commentField.innerHTML = '';
 
             commentsRaiting.forEach((comment: Comment, index: number) => {
-                commentField.innerHTML += renderComment(comment, index); // Не видно определения renderComment
+                commentField.innerHTML += renderComment(comment, index); 
             });
-            initAnswersEvent(); // Не видно определения initAnswersEvent
+            initAnswersEvent(); 
         }
     }
 
@@ -123,23 +122,23 @@ triangle.addEventListener('click', function (event: Event) {
 
         if (transformTriangle) {
 
-        target.style.transform = 'rotate(180deg)';
+        target.style.transform = 'rotate(360deg)';
             commentsRaiting.sort((a: Comment, b: Comment) => a.rating - b.rating);
             commentField.innerHTML = '';
 
             commentsRaiting.forEach((comment: Comment, index:number) => {
-                commentField.innerHTML += renderComment(comment, index); // Не видно определения renderComment
+                commentField.innerHTML += renderComment(comment, index);
             });
-            initAnswersEvent(); // Не видно определения initAnswersEvent
+            initAnswersEvent();
         } else {
-            target.style.transform = 'rotate(360deg)';
+            target.style.transform = 'rotate(180deg)';
             commentsRaiting.sort((a: Comment, b: Comment) => b.rating - a.rating);
             commentField.innerHTML = '';
 
             commentsRaiting.forEach((comment: Comment, index:number) => {
-                commentField.innerHTML += renderComment(comment, index); // Не видно определения renderComment
+                commentField.innerHTML += renderComment(comment, index); 
             });
-            initAnswersEvent(); // Не видно определения initAnswersEvent
+            initAnswersEvent(); 
         }
     }
 
@@ -148,21 +147,19 @@ triangle.addEventListener('click', function (event: Event) {
         const commentsRaiting = comments.slice();
 
         if (transformTriangle) {
-            target.style.transform = 'rotate(180deg)';
+            target.style.transform = 'rotate(360deg)';
             commentsRaiting.sort((a: Comment, b: Comment) => a.time - b.time);
             commentField.innerHTML = '';
 
-            // Рендеринг комментариев в порядке возрастания даты размещения
             commentsRaiting.forEach((comment: Comment, index: number) => {
                 commentField.innerHTML += renderComment(comment, index);
             });
             initAnswersEvent();
         } else {
-            target.style.transform = 'rotate(360deg)';
+            target.style.transform = 'rotate(180deg)';
             commentsRaiting.sort((a: Comment, b: Comment) => b.time - a.time);
             commentField.innerHTML = '';
 
-            // Рендеринг комментариев в порядке убывания даты размещения
             commentsRaiting.forEach((comment: Comment, index: number) => {
                 commentField.innerHTML += renderComment(comment, index);
             });
@@ -175,7 +172,7 @@ triangle.addEventListener('click', function (event: Event) {
         const commentsRaiting = comments.slice();
 
         if (transformTriangle) {
-            target.style.transform = 'rotate(180deg)';
+            target.style.transform = 'rotate(360deg)';
             commentsRaiting.sort((a: Comment, b: Comment) => a.answers.length - b.answers.length);
             commentField.innerHTML = '';
 
@@ -184,7 +181,7 @@ triangle.addEventListener('click', function (event: Event) {
             });
             initAnswersEvent();
         } else {
-            target.style.transform = 'rotate(360deg)';
+            target.style.transform = 'rotate(180deg)';
             commentsRaiting.sort((a: Comment, b: Comment) => b.answers.length - a.answers.length);
             commentField.innerHTML = '';
 
