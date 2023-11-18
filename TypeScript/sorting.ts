@@ -48,14 +48,15 @@ function insertingImage(target: HTMLElement, dropDown: HTMLElement): void {
         });
 
         if (target.classList.value === 'drop-down__list--p') {
-            
-                target.parentElement.querySelector(`[data="${activeTriangle}"]`)
-                    .insertAdjacentHTML('beforebegin', imageMark.outerHTML);
-            
+            const element = target.parentElement.querySelector(`[data="${activeTriangle}"]`);
+            if (element) {
+                element.insertAdjacentHTML('beforebegin', imageMark.outerHTML);
+            }
         } else if (target.classList.value === 'drop-down__list--li') {
-            
-                target.querySelector(`[data="${activeTriangle}"]`).insertAdjacentHTML('beforebegin', imageMark.outerHTML);
-            
+            const element = target.querySelector(`[data="${activeTriangle}"]`);
+            if (element) {
+                element.insertAdjacentHTML('beforebegin', imageMark.outerHTML);
+            }
         }
     }
 }
