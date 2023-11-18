@@ -1,145 +1,203 @@
 import { comments, showAnswer, initAnswersEvent } from './main.js';
 import { timeConverter } from './utils.js';
-const triangle = document.querySelector('.triangle');
-const commentField = document.querySelector('.comment-field');
-let activeTriangle;
-let transformTriangle = false;
-function insertingImage(target, dropDown) {
-    const imageMark = new Image();
+
+type initAnswersEvent = void;
+
+const triangle: HTMLElement = document.querySelector('.triangle')!;
+const commentField: HTMLElement = document.querySelector('.comment-field')!;
+
+let activeTriangle: number;
+let transformTriangle: boolean = false;
+
+// Типизация для элемента dropDown
+type DropDownElement = HTMLElement & {
+    classList: {
+        value: string;
+    };
+    querySelector: (selector: string) => HTMLElement | null;
+    querySelectorAll: (selector: string) => NodeListOf<HTMLElement>;
+    matches: (selector: string) => boolean;
+};
+
+type Comment = {
+    name: string;
+    body: string;
+    time: number;
+    answers: Answer[];
+    rating: number;
+    is_favorite: boolean;
+};
+
+type Answer = {
+    name: string;
+    body: string;
+    time: number;
+    rating: number;
+    is_favorite: boolean;
+};
+
+function insertingImage(target: HTMLElement, dropDown: HTMLElement): void {
+    const imageMark: HTMLImageElement = new Image();
     imageMark.src = './images/check-mark.svg';
     imageMark.alt = 'Check-Mark';
     imageMark.classList.add('selected');
+
     if (target.matches('.drop-down__list--p') || target.matches('.drop-down__list--li')) {
         dropDown.querySelectorAll('.selected').forEach((mark) => {
             mark.remove();
         });
-        if (target.classList.value === 'drop-down__list--p' && target != null) {
-            target.parentElement.querySelector(`[data="${activeTriangle}"]`)
-                .insertAdjacentHTML('beforebegin', imageMark.outerHTML);
-        }
-        else if (target.classList.value === 'drop-down__list--li' && target != null) {
-            target.querySelector(`[data="${activeTriangle}"]`).insertAdjacentHTML('beforebegin', imageMark.outerHTML);
+
+        if (target.classList.value === 'drop-down__list--p') {
+            
+                target.parentElement.querySelector(`[data="${activeTriangle}"]`)
+                    .insertAdjacentHTML('beforebegin', imageMark.outerHTML);
+            
+        } else if (target.classList.value === 'drop-down__list--li') {
+            
+                target.querySelector(`[data="${activeTriangle}"]`).insertAdjacentHTML('beforebegin', imageMark.outerHTML);
+            
         }
     }
 }
-export function sortingComments(dropDown) {
-    const nameSorting = document.querySelector('.filters');
-    dropDown.addEventListener('click', function (event) {
-        const target = event.target;
-        activeTriangle = parseInt(target.getAttribute('data'));
+
+export function sortingComments(dropDown: DropDownElement): void {
+    const nameSorting: HTMLElement = document.querySelector('.filters')!;
+
+    dropDown.addEventListener('click', function (event: Event) {
+        const target = event.target as HTMLElement;
+        activeTriangle = parseInt(target.getAttribute('data')!);
         if (activeTriangle === 0) {
             insertingImage(target, dropDown);
             nameSorting.innerHTML = 'По дате';
         }
+
         if (activeTriangle === 1) {
             insertingImage(target, dropDown);
             nameSorting.innerHTML = 'По количеству оценок';
         }
+
         if (activeTriangle === 2) {
             insertingImage(target, dropDown);
             nameSorting.innerHTML = 'По актуальности';
         }
+
         if (activeTriangle === 3) {
             insertingImage(target, dropDown);
             nameSorting.innerHTML = 'По количеству ответов';
         }
     });
 }
-triangle.addEventListener('click', function (event) {
-    const target = event.target;
+
+triangle.addEventListener('click', function (event: Event) {
+    const target = event.target as HTMLElement;
+
     if (activeTriangle === 0) {
         transformTriangle = !transformTriangle;
         const commentsRaiting = comments.slice();
+
         if (transformTriangle) {
             target.style.transform = 'rotate(180deg)';
-            commentsRaiting.sort((a, b) => a.time - b.time);
+            commentsRaiting.sort((a: Comment, b: Comment) => a.time - b.time);
             commentField.innerHTML = '';
-            commentsRaiting.forEach((comment, index) => {
+
+            commentsRaiting.forEach((comment: Comment, index: number) => {
                 commentField.innerHTML += renderComment(comment, index); // Не видно определения renderComment
             });
             initAnswersEvent(); // Не видно определения initAnswersEvent
-        }
-        else {
+        } else {
             target.style.transform = 'rotate(360deg)';
-            commentsRaiting.sort((a, b) => b.time - a.time);
+            commentsRaiting.sort((a: Comment, b: Comment) => b.time - a.time);
             commentField.innerHTML = '';
-            commentsRaiting.forEach((comment, index) => {
+
+            commentsRaiting.forEach((comment: Comment, index: number) => {
                 commentField.innerHTML += renderComment(comment, index); // Не видно определения renderComment
             });
             initAnswersEvent(); // Не видно определения initAnswersEvent
         }
     }
+
     if (activeTriangle === 1) {
         transformTriangle = !transformTriangle;
         const commentsRaiting = comments.slice();
+
         if (transformTriangle) {
-            target.style.transform = 'rotate(180deg)';
-            commentsRaiting.sort((a, b) => a.rating - b.rating);
+
+        target.style.transform = 'rotate(180deg)';
+            commentsRaiting.sort((a: Comment, b: Comment) => a.rating - b.rating);
             commentField.innerHTML = '';
-            commentsRaiting.forEach((comment, index) => {
+
+            commentsRaiting.forEach((comment: Comment, index:number) => {
                 commentField.innerHTML += renderComment(comment, index); // Не видно определения renderComment
             });
             initAnswersEvent(); // Не видно определения initAnswersEvent
-        }
-        else {
+        } else {
             target.style.transform = 'rotate(360deg)';
-            commentsRaiting.sort((a, b) => b.rating - a.rating);
+            commentsRaiting.sort((a: Comment, b: Comment) => b.rating - a.rating);
             commentField.innerHTML = '';
-            commentsRaiting.forEach((comment, index) => {
+
+            commentsRaiting.forEach((comment: Comment, index:number) => {
                 commentField.innerHTML += renderComment(comment, index); // Не видно определения renderComment
             });
             initAnswersEvent(); // Не видно определения initAnswersEvent
         }
     }
+
     if (activeTriangle == 2) {
         transformTriangle = !transformTriangle;
         const commentsRaiting = comments.slice();
+
         if (transformTriangle) {
             target.style.transform = 'rotate(180deg)';
-            commentsRaiting.sort((a, b) => a.time - b.time);
+            commentsRaiting.sort((a: Comment, b: Comment) => a.time - b.time);
             commentField.innerHTML = '';
+
             // Рендеринг комментариев в порядке возрастания даты размещения
-            commentsRaiting.forEach((comment, index) => {
+            commentsRaiting.forEach((comment: Comment, index: number) => {
                 commentField.innerHTML += renderComment(comment, index);
             });
             initAnswersEvent();
-        }
-        else {
+        } else {
             target.style.transform = 'rotate(360deg)';
-            commentsRaiting.sort((a, b) => b.time - a.time);
+            commentsRaiting.sort((a: Comment, b: Comment) => b.time - a.time);
             commentField.innerHTML = '';
+
             // Рендеринг комментариев в порядке убывания даты размещения
-            commentsRaiting.forEach((comment, index) => {
+            commentsRaiting.forEach((comment: Comment, index: number) => {
                 commentField.innerHTML += renderComment(comment, index);
             });
             initAnswersEvent();
         }
     }
+
     if (activeTriangle == 3) {
         transformTriangle = !transformTriangle;
         const commentsRaiting = comments.slice();
+
         if (transformTriangle) {
             target.style.transform = 'rotate(180deg)';
-            commentsRaiting.sort((a, b) => a.answers.length - b.answers.length);
+            commentsRaiting.sort((a: Comment, b: Comment) => a.answers.length - b.answers.length);
             commentField.innerHTML = '';
-            commentsRaiting.forEach((comment, index) => {
+
+            commentsRaiting.forEach((comment: Comment, index:number) => {
                 commentField.innerHTML += renderComment(comment, index);
             });
             initAnswersEvent();
-        }
-        else {
+        } else {
             target.style.transform = 'rotate(360deg)';
-            commentsRaiting.sort((a, b) => b.answers.length - a.answers.length);
+            commentsRaiting.sort((a: Comment, b: Comment) => b.answers.length - a.answers.length);
             commentField.innerHTML = '';
-            commentsRaiting.forEach((comment, index) => {
+
+            commentsRaiting.forEach((comment: Comment, index: number) => {
                 commentField.innerHTML += renderComment(comment, index);
             });
             initAnswersEvent();
         }
     }
 });
-function renderComment(comment, commentIndex) {
+
+function renderComment(comment: Comment, commentIndex: number): string {
     let out = '';
+
     out += `<div class="static-comment" data-index="${commentIndex}">
         <div class="static-comment__flex">
         <img src="./images/Max.png" alt="Max" class="static-comment__avatar">
@@ -172,5 +230,6 @@ function renderComment(comment, commentIndex) {
             </div>
             <div class="reply-field">${showAnswer(comment.answers, commentIndex)}</div>
 </div>`;
+
     return out;
 }
